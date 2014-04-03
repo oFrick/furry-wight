@@ -1,5 +1,7 @@
 package com.cleverabbit.gui;
 
+import java.awt.FlowLayout;
+import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -7,6 +9,10 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
  * Az alkalmazás ablaka
@@ -22,6 +28,10 @@ public class MainFrame extends JFrame {
 	private JMenuItem mentFájlrendszer;
 	private JMenuItem kilépés;
 	
+	private JPanel panel;
+	
+	private JTree explorer;
+	
 	/**
 	 * Az ablakot megvalósító osztály. Tartalmazza az egyes menüket, azok elemeit, illetve az ezekhez tartozó eseménykezelõket.
 	 * @author Kiss Dániel
@@ -36,6 +46,7 @@ public class MainFrame extends JFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Ablakbezárás esemény kezelése
 		
 		loadMenus();
+		loadContent();
 		
 		this.setVisible(true); //Láthatóva teszem
 		
@@ -48,6 +59,20 @@ public class MainFrame extends JFrame {
 				
 			}
 		});
+	}
+	
+	private void loadContent(){
+		FlowLayout layout = new FlowLayout(FlowLayout.CENTER);
+		panel = new JPanel(layout);
+		setContentPane(panel);
+		
+		DefaultMutableTreeNode top = new DefaultMutableTreeNode("Root könyvtár");
+		explorer = new JTree(top);
+		JScrollPane treeView = new JScrollPane(explorer);
+		
+		//panel.add(explorer);
+		panel.add(treeView);
+		
 	}
 	
 	/**

@@ -16,7 +16,7 @@ public class FájlrendszerMain {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				MainFrame fram = new MainFrame("Fájlrendszer v0.0.1"); //Frame létrehozása
+				MainFrame frame = new MainFrame("Fájlrendszer v0.0.1"); //Frame létrehozása
 			}
 		});
 
