@@ -4,6 +4,11 @@ import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
+ * A fájlrendszer futtatható osztálya<br/><br/>
+ * Ide kellene létrehozni a fájlrendszer-t kezelõ osztályt, amely mezõt valahogy (akár getteren keresztül) el lehessen érni.<br/><br/>
+ * Mûködésvázlat:<br/>
+ * 
+ * A felhasználó a frame objektumon belül kommunikál, azaz ott hív meg egyes metódusokat. Ezek fogják meghívjni a fájlrendszer és fájl metódusait.
  * @author Kiss Dániel
  *
  */
@@ -18,7 +23,7 @@ public class FájlrendszerMain {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				frame = new MainFrame("Fájlrendszer v0.0.2"); //Frame létrehozása
+				frame = new MainFrame("Fájlrendszer v0.0.4"); //Frame létrehozása
 				
 				//Teszteleléshez meghívott függvény - Dani
 				DaniTeszt();
