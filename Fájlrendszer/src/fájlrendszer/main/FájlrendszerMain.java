@@ -4,6 +4,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import fájlrendszer.gui.*;
+import fájlrendszer.titkosítás.Titkosító;
+import fájlrendszer.titkosítás.titkosítóAlgoritmus.EltolóAlgoritmus;
 
 /**
  * A fájlrendszer futtatható osztálya<br/><br/>
@@ -46,6 +48,12 @@ public class FájlrendszerMain {
 		frame.addTreeNode(opr1, jegyzetek); //A Rodek féle segédletet a jegyzetek nevû mappába rakjuk
 		frame.addTreeNode(opr2, jegyzetek);
 		frame.addTreeNode(játékok);
+		
+		EltolóAlgoritmus algoritmus = new EltolóAlgoritmus();
+		Titkosító titkos = new Titkosító("abcd", algoritmus);
+		System.out.println("\"szoveg\" titkosítása: "+titkos.titkosít("szoveg"));
+		System.out.println("dekódolva így néz ki: "+titkos.visszanyer(titkos.titkosít("szoveg")));
+		
 	}
 
 }

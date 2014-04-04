@@ -23,7 +23,7 @@ public final class EltolóAlgoritmus extends TitkosítóAlgoritmus {
 		for(int i=0; i<mitArray.length; i++){
 			mitArray[i] -= kulcsArray[i];
 		}
-		return null;
+		return mitArray.toString();
 	}
 
 }
