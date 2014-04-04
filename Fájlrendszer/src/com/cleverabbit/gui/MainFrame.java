@@ -32,6 +32,7 @@ import javax.swing.tree.TreeSelectionModel;
  */
 public class MainFrame extends JFrame {
 	
+	//Menü mezõk
 	private JMenuBar menüsor;
 	private JMenu fájlrendszerMenü;
 	private JMenuItem újFáljrendszer;
@@ -39,8 +40,8 @@ public class MainFrame extends JFrame {
 	private JMenuItem mentFájlrendszer;
 	private JMenuItem kilépés;
 	
+	//Panel mezõk
 	private JPanel panel;
-	
 	private JTree explorer;
 	private DefaultMutableTreeNode rootElement;
 	private DefaultTreeModel treemodel;
@@ -48,8 +49,9 @@ public class MainFrame extends JFrame {
 	private JButton létrehozGomb;
 	private JButton másolásGomb;
 	private JButton áthelyezésGomb;
-	
 	private GridBagConstraints constraint; //Elhelyezési "kényszer"
+	
+	private DefaultMutableTreeNode selectedNode; //A fában éppen kiválasztott node
 	
 	/**
 	 * Az ablakot megvalósító osztály. Tartalmazza az egyes menüket, azok elemeit, illetve az ezekhez tartozó eseménykezelõket.
@@ -107,13 +109,23 @@ public class MainFrame extends JFrame {
 	 * @param what - {@link DefaultMutableTreeNode}, amit törölni szeretnénk
 	 */
 	public void removeTreeNode(DefaultMutableTreeNode what){
-		what.removeFromParent();
+		treemodel.removeNodeFromParent(what);
 	}
 	
+	/**
+	 * A panel (azaz a grafikus felület) tartalmának betöltése, beállítása, az ottani események kezelése
+	 * @author Kiss Dániel
+	 */
+	/**
+	 * @author Kiss Dániel
+	 */
 	private void loadContent(){
 		GridBagLayout layout = new GridBagLayout();
 		constraint = new GridBagConstraints();
 		constraint.fill = GridBagConstraints.HORIZONTAL; // Maximális szélesség, szükséges magasság
+		
+		selectedNode = null; //Alapértelmezés: nincs kiválaszott TreeNode induláskor
+		
 		panel = new JPanel(layout);
 		setContentPane(panel);
 		
@@ -134,18 +146,19 @@ public class MainFrame extends JFrame {
 			
 			@Override
 			public void treeNodesRemoved(TreeModelEvent e) {
-				
+				SwingUtilities.updateComponentTreeUI(explorer);
+				System.out.println("TreeNode törölve!");
 			}
 			
 			@Override
 			public void treeNodesInserted(TreeModelEvent e) {
 				SwingUtilities.updateComponentTreeUI(explorer);
-				System.out.println("Hozzáadva!");
+				System.out.println("TreeNode létrehozva!");
 			}
 			
 			@Override
 			public void treeNodesChanged(TreeModelEvent e) {
-				
+				System.out.println("TreeNode megváltozott!");
 			}
 		}));
 		explorer.setEditable(true);
@@ -161,6 +174,7 @@ public class MainFrame extends JFrame {
 				if(selected == null) return; //Ha nincs kiválasztva semmi, akkor kilépünk a függvénybõl
 				
 				//TODO Kiválaszott TreeNode kezelése: fájl adatainak megjelenítése, aktív(kiválasztott) TreeNode beállítása=> osztály privát adattagban
+				selectedNode = selected;
 				
 			}
 		});
@@ -173,7 +187,7 @@ public class MainFrame extends JFrame {
 		constraint.weighty = 1;
 		panel.add(treeView, constraint);
 		
-		létrehozGomb = new JButton("Új elem");
+		létrehozGomb = new JButton("Létrehozás");
 		constraint.gridwidth = 1;
 		constraint.weightx = 1;
 		constraint.weighty = 0.5;
@@ -196,7 +210,30 @@ public class MainFrame extends JFrame {
 		constraint.gridy = 1;
 		panel.add(áthelyezésGomb, constraint);
 		
+		//Gomb eseménykezelõk
+		
+		létrehozGomb.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Új fájl létrehozása - fájl objektum példányosítása
+				if(selectedNode == null) addTreeNode(new DefaultMutableTreeNode("Új elem"));
+				else addTreeNode(new DefaultMutableTreeNode("Új elem"), selectedNode);
+			}
+		});
+		
+		törlésGomb.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Fájl törlés esemény implementálása a Fájl objektummal
+				if(selectedNode != null) removeTreeNode(selectedNode);
+			}
+		});
+		
 	}
+	
+	//--------------------------------------------------------------------------------------------------------------------
 	
 	/**
 	 * Az ablak menüinek létrehozása és betöltése
