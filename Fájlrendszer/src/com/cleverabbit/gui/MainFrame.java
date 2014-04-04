@@ -217,6 +217,7 @@ public class MainFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Új fájl létrehozása - fájl objektum példányosítása
+				
 				if(selectedNode == null) addTreeNode(new DefaultMutableTreeNode("Új elem"));
 				else addTreeNode(new DefaultMutableTreeNode("Új elem"), selectedNode);
 			}
@@ -227,7 +228,10 @@ public class MainFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Fájl törlés esemény implementálása a Fájl objektummal
-				if(selectedNode != null) removeTreeNode(selectedNode);
+				if(selectedNode != null) {
+					removeTreeNode(selectedNode);
+					selectedNode = null; //Törlés után állítsuk null-ra a kiválasztott TreeNode-ot, különben BUG-ot kapunk!
+				}
 			}
 		});
 		
