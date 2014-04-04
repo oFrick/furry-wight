@@ -147,18 +147,16 @@ public class MainFrame extends JFrame {
 			@Override
 			public void treeNodesRemoved(TreeModelEvent e) {
 				SwingUtilities.updateComponentTreeUI(explorer);
-				System.out.println("TreeNode törölve!");
 			}
 			
 			@Override
 			public void treeNodesInserted(TreeModelEvent e) {
 				SwingUtilities.updateComponentTreeUI(explorer);
-				System.out.println("TreeNode létrehozva!");
 			}
 			
 			@Override
 			public void treeNodesChanged(TreeModelEvent e) {
-				
+				System.out.println("TreeNode megváltozott!");
 			}
 		}));
 		explorer.setEditable(true);
