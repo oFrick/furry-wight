@@ -1,10 +1,14 @@
 package com.cleverabbit.gui;
 
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -40,6 +44,12 @@ public class MainFrame extends JFrame {
 	private JTree explorer;
 	private DefaultMutableTreeNode rootElement;
 	private DefaultTreeModel treemodel;
+	private JButton törlésGomb;
+	private JButton létrehozGomb;
+	private JButton másolásGomb;
+	private JButton áthelyezésGomb;
+	
+	private GridBagConstraints constraint; //Elhelyezési "kényszer"
 	
 	/**
 	 * Az ablakot megvalósító osztály. Tartalmazza az egyes menüket, azok elemeit, illetve az ezekhez tartozó eseménykezelõket.
@@ -101,7 +111,9 @@ public class MainFrame extends JFrame {
 	}
 	
 	private void loadContent(){
-		FlowLayout layout = new FlowLayout(FlowLayout.CENTER);
+		GridBagLayout layout = new GridBagLayout();
+		constraint = new GridBagConstraints();
+		constraint.fill = GridBagConstraints.HORIZONTAL; // Maximális szélesség, szükséges magasság
 		panel = new JPanel(layout);
 		setContentPane(panel);
 		
@@ -154,8 +166,35 @@ public class MainFrame extends JFrame {
 		});
 		
 		
-		//panel.add(explorer);
-		panel.add(treeView);
+		constraint.gridwidth = 4; //Három oszlop széles
+		constraint.gridx = 0; //0. sor
+		constraint.gridy = 0; //0. oszlopában van
+		constraint.weightx = 1;
+		constraint.weighty = 1;
+		panel.add(treeView, constraint);
+		
+		létrehozGomb = new JButton("Új elem");
+		constraint.gridwidth = 1;
+		constraint.weightx = 1;
+		constraint.weighty = 0.5;
+		constraint.gridx = 0;
+		constraint.gridy = 1;
+		panel.add(létrehozGomb, constraint);
+		
+		törlésGomb = new JButton("Törlés");
+		constraint.gridx = 1;
+		constraint.gridy = 1;
+		panel.add(törlésGomb, constraint);
+		
+		másolásGomb = new JButton("Másolás");
+		constraint.gridx = 2;
+		constraint.gridy = 1;
+		panel.add(másolásGomb, constraint);
+		
+		áthelyezésGomb = new JButton("Áthelyezés");
+		constraint.gridx = 3;
+		constraint.gridy = 1;
+		panel.add(áthelyezésGomb, constraint);
 		
 	}
 	
@@ -169,6 +208,7 @@ public class MainFrame extends JFrame {
 		fájlrendszerMenü = new JMenu("Fájlrendszer");
 		újFáljrendszer = new JMenuItem("Új");
 		betöltFájlrendszer = new JMenuItem("Betölt");
+		mentFájlrendszer = new JMenuItem("Mentés");
 		kilépés = new JMenuItem("Kilépés");
 		
 		//Objektumok "elhejezése"
@@ -176,6 +216,7 @@ public class MainFrame extends JFrame {
 		menüsor.add(fájlrendszerMenü);
 		fájlrendszerMenü.add(újFáljrendszer);
 		fájlrendszerMenü.add(betöltFájlrendszer);
+		fájlrendszerMenü.add(mentFájlrendszer);
 		fájlrendszerMenü.add(kilépés);
 	}
 
