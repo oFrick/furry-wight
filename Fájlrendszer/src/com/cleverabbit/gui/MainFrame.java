@@ -158,7 +158,7 @@ public class MainFrame extends JFrame {
 			
 			@Override
 			public void treeNodesChanged(TreeModelEvent e) {
-				System.out.println("TreeNode megváltozott!");
+				
 			}
 		}));
 		explorer.setEditable(true);
