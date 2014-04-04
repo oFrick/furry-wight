@@ -17,7 +17,7 @@ public class FájlrendszerMain {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				MainFrame frame = new MainFrame("Fájlrendszer v0.0.1"); //Frame létrehozása
+				MainFrame frame = new MainFrame("Fájlrendszer v0.0.2"); //Frame létrehozása
 				
 				//Tesztelõ kód innentõl!!!!!!
 				DefaultMutableTreeNode jegyzetek = new DefaultMutableTreeNode("Jegyzetek"); //mappa vagy fájl: jegyzetek

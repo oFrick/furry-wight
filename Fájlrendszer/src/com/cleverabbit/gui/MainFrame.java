@@ -15,8 +15,11 @@ import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeSelectionModel;
 
 /**
  * Az alkalmazás ablaka
@@ -54,15 +57,14 @@ public class MainFrame extends JFrame {
 		loadMenus();
 		loadContent();
 		
-		this.setVisible(true); //Láthatóva teszem
+		this.setVisible(true); //Láthatóvá teszem
 		
 		//Eseménykezelõk
 		kilépés.addActionListener(new ActionListener() { //Kilépés
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				//System.exit(0);
-				addTreeNode(new DefaultMutableTreeNode("Dani"));
+				System.exit(0);
 				
 			}
 		});
@@ -75,9 +77,8 @@ public class MainFrame extends JFrame {
 	 * @param at - {@link DefaultMutableTreeNode}, ahová el szeretnénk helyezni
 	 */
 	public void addTreeNode(DefaultMutableTreeNode what, DefaultMutableTreeNode at){
-		at.add(what);
-		//treemodel.insertNodeInto(what, at, at.getChildCount());
-		SwingUtilities.updateComponentTreeUI(explorer);
+		//at.add(what); ne ezt használjuk!
+		treemodel.insertNodeInto(what, at, at.getChildCount());
 	}
 	
 	/**
@@ -109,34 +110,48 @@ public class MainFrame extends JFrame {
 		JScrollPane treeView = new JScrollPane(explorer);
 		explorer.setVisibleRowCount(15);
 		
+		//Fa eseménykezelõjének beállítása
 		treemodel = new DefaultTreeModel(rootElement);
 		treemodel.addTreeModelListener((new TreeModelListener() {
 			
 			@Override
 			public void treeStructureChanged(TreeModelEvent e) {
-				// TODO Auto-generated method stub
+				System.out.println("Fa struktúra változás!");
 				
 			}
 			
 			@Override
 			public void treeNodesRemoved(TreeModelEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 			
 			@Override
 			public void treeNodesInserted(TreeModelEvent e) {
-				// TODO Auto-generated method stub
-				
+				SwingUtilities.updateComponentTreeUI(explorer);
+				System.out.println("Hozzáadva!");
 			}
 			
 			@Override
 			public void treeNodesChanged(TreeModelEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 		}));
 		explorer.setEditable(true);
+		
+		//Kiválasztásos eseménykezelés beállítása
+		explorer.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);	
+		explorer.addTreeSelectionListener(new TreeSelectionListener() {
+			
+			@Override
+			public void valueChanged(TreeSelectionEvent arg0) {
+				DefaultMutableTreeNode selected = (DefaultMutableTreeNode) explorer.getLastSelectedPathComponent(); //A kiválasztott TreeNode
+				
+				if(selected == null) return; //Ha nincs kiválasztva semmi, akkor kilépünk a függvénybõl
+				
+				//TODO Kiválaszott TreeNode kezelése: fájl adatainak megjelenítése, aktív(kiválasztott) TreeNode beállítása=> osztály privát adattagban
+				
+			}
+		});
 		
 		
 		//panel.add(explorer);
