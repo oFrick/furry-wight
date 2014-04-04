@@ -1,4 +1,4 @@
-package com.cleverabbit.gui;
+package fájlrendszer.gui;
 
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;

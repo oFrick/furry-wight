@@ -1,7 +1,9 @@
-package com.cleverabbit.gui;
+package fájlrendszer.main;
 
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
+
+import fájlrendszer.gui.*;
 
 /**
  * A fájlrendszer futtatható osztálya<br/><br/>
