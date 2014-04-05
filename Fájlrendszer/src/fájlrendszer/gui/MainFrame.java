@@ -1,18 +1,18 @@
 package fájlrendszer.gui;
 
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.LayoutManager;
+import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -222,6 +222,8 @@ public class MainFrame extends JFrame {
 				if(selectedNode == null) addTreeNode(new DefaultMutableTreeNode("Új elem"));
 				else addTreeNode(new DefaultMutableTreeNode("Új elem"), selectedNode);
 				
+				újElemPopup("fájl");
+				
 			}
 		});
 		
@@ -262,6 +264,19 @@ public class MainFrame extends JFrame {
 		fájlrendszerMenü.add(betöltFájlrendszer);
 		fájlrendszerMenü.add(mentFájlrendszer);
 		fájlrendszerMenü.add(kilépés);
+	}
+	
+	private String újElemPopup(String milyet){
+		TextField szövegmezõ = new TextField("új elem");
+		Object[] válaszLehetõség = {"Adja meg a "+milyet+" nevét", szövegmezõ}; 
+		Object[] válaszGomb = {"Létrehozás", "Mégsem"};
+		
+		JOptionPane optionpane = new JOptionPane(válaszLehetõség, JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION, null, válaszGomb, válaszGomb[0]);
+		JDialog dialog = optionpane.createDialog(this, "Új "+milyet+" megadás");
+		dialog.show();
+		
+		return szövegmezõ.getText();
+		
 	}
 
 }
