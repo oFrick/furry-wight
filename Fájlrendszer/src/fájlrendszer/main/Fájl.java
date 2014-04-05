@@ -16,16 +16,19 @@ import javax.swing.tree.DefaultMutableTreeNode;
 public class Fájl {
 	
 	private Kiterjesztés kiterjesztés; //A fájl kiterjesztése
-	private int méret; //A fájl mérete
 	private String tartalom; //A fájl tartalma
 	private DefaultMutableTreeNode grafikusNode;
 	private DefaultMutableTreeNode szülõNode;
+	
+	private int méret; //A fájl mérete byte-ban
+	private static final int defaultMéret=1; //A fájl tartalmának egy elemi részegységéhez (pl szövegben betû, képben pixel) tartozó byte-ban megadott méretszükséglet
 	
 	public Fájl(DefaultMutableTreeNode grafikusNode, DefaultMutableTreeNode szülõNode){
 		this.grafikusNode = grafikusNode;
 		this.szülõNode = szülõNode;
 		
 		this.kiterjesztés = Kiterjesztés.DEFAULT;
+		
 	}
 	
 	public int getMéret() {return méret;}
@@ -35,9 +38,18 @@ public class Fájl {
 	public void setNév(String név){
 		grafikusNode.setUserObject(név);
 	}
+	public void setTartalom(String tartalom){
+		this.tartalom = tartalom;
+	}
 	
-	private void setMéret(String tartalom){
-		
+	/**
+	 * A fájl méretének megváltoztatása.<br/><br/>
+	 * A fájl tartalmának megfelelõen változtatja a méretet. Akkor lesz meghívva ez a metódus, ha változik a fájl tartalma.<br/>
+	 * A tartalom mezõben lévõ minden egyes karakterrel növekszik/csökken a méret 1 byte-tal.
+	 * @author Kiss Dániel
+	 */
+	private void setMéret(){
+		méret = tartalom.length()*defaultMéret;
 	}
 
 }
