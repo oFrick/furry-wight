@@ -50,9 +50,9 @@ public class FájlrendszerMain {
 		frame.addTreeNode(játékok);
 		
 		EltolóAlgoritmus algoritmus = new EltolóAlgoritmus();
-		Titkosító titkos = new Titkosító("abcd", algoritmus);
-		System.out.println("\"szoveg\" titkosítása: "+titkos.titkosít("szoveg"));
-		System.out.println("dekódolva így néz ki: "+titkos.visszanyer(titkos.titkosít("szoveg")));
+		Titkosító titkos = new Titkosító("alma", algoritmus);
+		System.out.println("\"szöveg\" titkosítva: "+titkos.titkosít("szöveg"));
+		System.out.println("visszafejtve: "+titkos.visszanyer(titkos.titkosít("szöveg")));
 		
 	}
 
