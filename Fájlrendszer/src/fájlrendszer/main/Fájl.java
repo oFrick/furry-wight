@@ -18,7 +18,7 @@ public class Fájl {
 	private Fájltípus fájltípus; //A fájl kiterjesztése
 	private String tartalom; //A fájl tartalma
 	private DefaultMutableTreeNode grafikusNode;
-	private DefaultMutableTreeNode szülõNode;
+	private DefaultMutableTreeNode szülõNode; //Ez is grafikus!!!
 	
 	private int méret; //A fájl mérete byte-ban
 	private static final int defaultMéret=1; //A fájl tartalmának egy elemi részegységéhez (pl szövegben betû, képben pixel) tartozó byte-ban megadott méretszükséglet
@@ -52,6 +52,26 @@ public class Fájl {
 	 */
 	private void setMéret(){
 		méret = tartalom.length()*defaultMéret;
+	}
+	
+	/**A fájl betöltése a lemezrõl, azaz egy elmentett fájlrendszer fájlból.<br/><br/>
+	 * 
+	 * <b>Bálint! Ezt te tudnád itt implementálni a dll-ed alapján</b>
+	 * @author Kiss Dániel
+	 */
+	public void betöltLemezrõl(){
+		
+	}
+	
+	/**
+	 * A fájl kiírása a lemezre<br/><br/>
+	 * 
+	 * <b>Bálint! Ezt te tudnád itt implementálni a dll-ed alapján</b>
+	 * @author Kiss Dániel
+	 * 
+	 */
+	public void kiírLemezre(){
+		
 	}
 
 }
