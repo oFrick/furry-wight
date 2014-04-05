@@ -15,7 +15,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  */
 public class Fájl {
 	
-	private Kiterjesztés kiterjesztés; //A fájl kiterjesztése
+	private Fájltípus fájltípus; //A fájl kiterjesztése
 	private String tartalom; //A fájl tartalma
 	private DefaultMutableTreeNode grafikusNode;
 	private DefaultMutableTreeNode szülõNode;
@@ -27,7 +27,9 @@ public class Fájl {
 		this.grafikusNode = grafikusNode;
 		this.szülõNode = szülõNode;
 		
-		this.kiterjesztés = Kiterjesztés.DEFAULT;
+		this.fájltípus = Fájltípus.DEFAULT;
+		
+		System.out.println("Fájl létrehozva: "+grafikusNode.getUserObject()+", itt: "+szülõNode.getUserObject()); //Debug
 		
 	}
 	

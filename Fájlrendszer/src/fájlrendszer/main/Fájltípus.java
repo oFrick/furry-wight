@@ -7,7 +7,7 @@ package fájlrendszer.main;
  * @author Kiss Dániel
  *
  */
-public enum Kiterjesztés {
+public enum Fájltípus {
 	
 	TXT (".txt"),
 	JPG (".jpg"),
@@ -17,7 +17,7 @@ public enum Kiterjesztés {
 	
 	private final String jelölés;
 	
-	Kiterjesztés(String jelölés)
+	Fájltípus(String jelölés)
 	{
 		this.jelölés = jelölés;
 	}
