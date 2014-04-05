@@ -25,6 +25,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
 
+import fájlrendszer.main.Fájl;
+
 /**
  * Az alkalmazás ablaka
  * @author Kiss Dániel
@@ -212,17 +214,20 @@ public class MainFrame extends JFrame {
 		
 		létrehozGomb.addActionListener(new ActionListener() {
 			
+			//-----Fájl létrehozás esemény-----
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Új fájl létrehozása - fájl objektum példányosítása
 				
 				if(selectedNode == null) addTreeNode(new DefaultMutableTreeNode("Új elem"));
 				else addTreeNode(new DefaultMutableTreeNode("Új elem"), selectedNode);
+				
 			}
 		});
 		
 		törlésGomb.addActionListener(new ActionListener() {
 			
+			//-----Fájl törlés esemény-----
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Fájl törlés esemény implementálása a Fájl objektummal
