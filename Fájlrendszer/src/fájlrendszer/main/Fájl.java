@@ -25,7 +25,6 @@ public class Fájl {
 	
 	public Fájl(DefaultMutableTreeNode grafikusNode, DefaultMutableTreeNode szülõNode){
 		this.grafikusNode = grafikusNode;
-		this.szülõNode = szülõNode;
 		
 		this.fájltípus = Fájltípus.DEFAULT;
 		
