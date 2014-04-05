@@ -12,6 +12,7 @@ import fájlrendszer.gui.*;
  * 
  * A felhasználó a frame objektumon belül kommunikál, azaz ott hív meg egyes metódusokat. Ezek fogják meghívjni a fájlrendszer és fájl metódusait.
  * @author Kiss Dániel
+ * @version 0.0.4
  *
  */
 public class FájlrendszerMain {
