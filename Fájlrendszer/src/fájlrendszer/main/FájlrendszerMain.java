@@ -18,6 +18,7 @@ import fájlrendszer.gui.*;
 public class FájlrendszerMain {
 	
 	private static MainFrame frame; //Az ablakként funkcionáló frame, grafikus megjelenítés
+	private static Fájlrendszer fájlrendszer;
 
 	public static void main(String[] args) {
 		
@@ -26,7 +27,7 @@ public class FájlrendszerMain {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				frame = new MainFrame("Fájlrendszer v0.0.4"); //Frame létrehozása
+				frame = new MainFrame("Fájlrendszer v0.0.4", fájlrendszer); //Frame létrehozása
 				
 				//Teszteleléshez meghívott függvény - Dani
 				DaniTeszt();
@@ -38,6 +39,7 @@ public class FájlrendszerMain {
 	}
 	
 	public static void DaniTeszt(){
+		
 		DefaultMutableTreeNode jegyzetek = new DefaultMutableTreeNode("Jegyzetek"); //mappa vagy fájl: jegyzetek
 		DefaultMutableTreeNode játékok = new DefaultMutableTreeNode("Játékok"); //mappa vagy fájl: játékok
 		DefaultMutableTreeNode opr1 = new DefaultMutableTreeNode("opr_Rodek.pdf"); //mappa vagy fájl: ...Rodek.pdf
