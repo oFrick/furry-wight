@@ -26,6 +26,8 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
 
 import fájlrendszer.main.Fájl;
+import fájlrendszer.main.Fájlrendszer;
+import fájlrendszer.main.Könyvtár;
 
 /**
  * Az alkalmazás ablaka
@@ -48,25 +50,30 @@ public class MainFrame extends JFrame {
 	private DefaultMutableTreeNode rootElement;
 	private DefaultTreeModel treemodel;
 	private JButton törlésGomb;
-	private JButton létrehozGomb;
+	private JButton újFájlGomb;
+	private JButton újMappaGomb;
 	private JButton másolásGomb;
 	private JButton áthelyezésGomb;
 	private GridBagConstraints constraint; //Elhelyezési "kényszer"
 	
+	//Fájlrendszer mezõk
 	private DefaultMutableTreeNode selectedNode; //A fában éppen kiválasztott node
+	private Fájlrendszer fájlrendszer;
 	
 	/**
 	 * Az ablakot megvalósító osztály. Tartalmazza az egyes menüket, azok elemeit, illetve az ezekhez tartozó eseménykezelõket.
 	 * @author Kiss Dániel
 	 * @param név - String, az ablak neve
 	 */
-	public MainFrame(String név){
+	public MainFrame(String név, Fájlrendszer fájlrendszer){
 		super(név);
 		
 		//Ablak inicializálása
 		
 		this.setSize(800, 600); //Ablak mérete
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Ablakbezárás esemény kezelése
+		
+		this.fájlrendszer = fájlrendszer;
 		
 		loadMenus();
 		loadContent();
@@ -131,7 +138,9 @@ public class MainFrame extends JFrame {
 		panel = new JPanel(layout);
 		setContentPane(panel);
 		
-		rootElement = new DefaultMutableTreeNode("Root könyvtár");
+		rootElement = new DefaultMutableTreeNode(new Könyvtár("Root könyvtáram"));
+		//fájlrendszer = new Fájlrendszer(new DefaultMutableTreeNode("Root könyvtár"));
+		
 		explorer = new JTree(rootElement);
 		JScrollPane treeView = new JScrollPane(explorer);
 		explorer.setVisibleRowCount(15);
@@ -180,49 +189,70 @@ public class MainFrame extends JFrame {
 		});
 		
 		
-		constraint.gridwidth = 4; //Három oszlop széles
+		constraint.gridwidth = 5; //Három oszlop széles
 		constraint.gridx = 0; //0. sor
 		constraint.gridy = 0; //0. oszlopában van
 		constraint.weightx = 1;
 		constraint.weighty = 1;
 		panel.add(treeView, constraint);
 		
-		létrehozGomb = new JButton("Létrehozás");
+		újFájlGomb = new JButton("Új Fájl");
 		constraint.gridwidth = 1;
 		constraint.weightx = 1;
 		constraint.weighty = 0.5;
 		constraint.gridx = 0;
 		constraint.gridy = 1;
-		panel.add(létrehozGomb, constraint);
+		panel.add(újFájlGomb, constraint);
+		
+		újMappaGomb = new JButton("Új Könyvtár");
+		constraint.gridwidth = 1;
+		constraint.gridx = 1;
+		constraint.gridy = 1;
+		panel.add(újMappaGomb, constraint);
 		
 		törlésGomb = new JButton("Törlés");
-		constraint.gridx = 1;
+		constraint.gridx = 2;
 		constraint.gridy = 1;
 		panel.add(törlésGomb, constraint);
 		
 		másolásGomb = new JButton("Másolás");
-		constraint.gridx = 2;
+		constraint.gridx = 3;
 		constraint.gridy = 1;
 		panel.add(másolásGomb, constraint);
 		
 		áthelyezésGomb = new JButton("Áthelyezés");
-		constraint.gridx = 3;
+		constraint.gridx = 4;
 		constraint.gridy = 1;
 		panel.add(áthelyezésGomb, constraint);
 		
 		//Gomb eseménykezelõk
 		
-		létrehozGomb.addActionListener(new ActionListener() {
+		újFájlGomb.addActionListener(new ActionListener() {
 			
 			//-----Fájl létrehozás esemény-----
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Új fájl létrehozása - fájl objektum példányosítása
 				
-				if(selectedNode == null) addTreeNode(new DefaultMutableTreeNode("Új elem"));
-				else addTreeNode(new DefaultMutableTreeNode("Új elem"), selectedNode);
+				Fájl fájl = new Fájl(újElemPopup("fájl"));
 				
-				újElemPopup("fájl");
+				if(selectedNode == null) addTreeNode(new DefaultMutableTreeNode(fájl));
+				else if(selectedNode.getUserObject() instanceof Könyvtár) addTreeNode(new DefaultMutableTreeNode(fájl), selectedNode);
+				
+			}
+		});
+		
+		újMappaGomb.addActionListener(new ActionListener() {
+			
+			//-----Könyvtár létrehozás esemény-----
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Új könyvtár létrehozása - könyvtár objektum példányosítása
+				
+				Könyvtár könyvtár = new Könyvtár(újElemPopup("könyvtár"));
+				
+				if(selectedNode == null) addTreeNode(new DefaultMutableTreeNode(könyvtár));
+				else if(selectedNode.getUserObject() instanceof Könyvtár) addTreeNode(new DefaultMutableTreeNode(könyvtár), selectedNode);
 				
 			}
 		});

@@ -6,11 +6,11 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 public class Könyvtár extends Entitás {
 	
-	private DefaultMutableTreeNode grafikusNode;
+	private String név;
 	
-	public Könyvtár(DefaultMutableTreeNode grafikusNode){
+	public Könyvtár(String név){
 		super();
-		this.grafikusNode = grafikusNode;
+		this.név = név;
 	}
 	
 	/**A könyvtár betöltése a lemezrõl, azaz egy elmentett fájlrendszer fájlból.<br/><br/>
@@ -31,6 +31,10 @@ public class Könyvtár extends Entitás {
 	 */
 	public void kiírLemezre(){
 		
+	}
+	
+	public String toString(){
+		return név;
 	}
 
 }
