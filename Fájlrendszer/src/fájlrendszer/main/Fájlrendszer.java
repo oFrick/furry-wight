@@ -37,15 +37,17 @@ public class Fájlrendszer {
 	 * @param isÚjfájlrendszer - boolean, új fájlrendszert szeretnénk-e?
 	 */
 	public Fájlrendszer(DefaultMutableTreeNode rootNode, boolean isÚjfájlrendszer){
+		fájlok = new ArrayList<Fájl>();
+		mappák = new ArrayList<Könyvtár>();
+		
 		if (isÚjfájlrendszer){
-			root = new Könyvtár(rootNode);
+			root = new Könyvtár(rootNode.getUserObject().toString());
+			mappák.add(root);
 			könyvtárLemezre(root);
 		}else{
 			root = könyvtárLemezrõl();
+			mappák.add(root);
 		}
-		
-		fájlok = new ArrayList<Fájl>();
-		mappák = new ArrayList<Könyvtár>();
 	}
 	
 	public Könyvtár könyvtárLemezrõl(){
@@ -72,6 +74,10 @@ public class Fájlrendszer {
 	public void remove(Entitás elem){
 		if(elem instanceof Fájl) fájlok.remove((Fájl)elem);
 		else mappák.remove((Könyvtár)elem);
+	}
+	
+	public Könyvtár getRoot(){
+		return root;
 	}
 
 }
