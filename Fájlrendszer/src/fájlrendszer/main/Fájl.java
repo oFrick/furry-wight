@@ -13,7 +13,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  * @author Kiss Dániel
  *
  */
-public class Fájl {
+public class Fájl extends Entitás{
 	
 	private Fájltípus fájltípus; //A fájl kiterjesztése
 	private String tartalom; //A fájl tartalma
@@ -24,6 +24,7 @@ public class Fájl {
 	private static final int defaultMéret=1; //A fájl tartalmának egy elemi részegységéhez (pl szövegben betû, képben pixel) tartozó byte-ban megadott méretszükséglet
 	
 	public Fájl(DefaultMutableTreeNode grafikusNode, DefaultMutableTreeNode szülõNode){
+		super();
 		this.grafikusNode = grafikusNode;
 		
 		this.fájltípus = Fájltípus.DEFAULT;

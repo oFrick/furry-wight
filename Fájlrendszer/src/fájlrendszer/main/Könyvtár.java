@@ -4,11 +4,12 @@ import java.util.List;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
-public class Könyvtár {
+public class Könyvtár extends Entitás {
 	
 	private DefaultMutableTreeNode grafikusNode;
 	
 	public Könyvtár(DefaultMutableTreeNode grafikusNode){
+		super();
 		this.grafikusNode = grafikusNode;
 	}
 	
