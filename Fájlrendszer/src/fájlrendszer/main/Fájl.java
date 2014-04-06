@@ -17,28 +17,25 @@ public class Fájl extends Entitás{
 	
 	private Fájltípus fájltípus; //A fájl kiterjesztése
 	private String tartalom; //A fájl tartalma
-	private DefaultMutableTreeNode grafikusNode;
-	private DefaultMutableTreeNode szülõNode; //Ez is grafikus!!!
+	private String név;
 	
 	private int méret; //A fájl mérete byte-ban
 	private static final int defaultMéret=1; //A fájl tartalmának egy elemi részegységéhez (pl szövegben betû, képben pixel) tartozó byte-ban megadott méretszükséglet
 	
-	public Fájl(DefaultMutableTreeNode grafikusNode, DefaultMutableTreeNode szülõNode){
+	public Fájl(String név){
 		super();
-		this.grafikusNode = grafikusNode;
 		
+		this.név = név;
 		this.fájltípus = Fájltípus.DEFAULT;
-		
-		System.out.println("Fájl létrehozva: "+grafikusNode.getUserObject()+", itt: "+szülõNode.getUserObject()); //Debug
 		
 	}
 	
 	public int getMéret() {return méret;}
-	public String getNév() {return (String)grafikusNode.getUserObject();}
+	public String getNév() {return név;}
 	public String getTartalom() {return tartalom;}
 	
 	public void setNév(String név){
-		grafikusNode.setUserObject(név);
+		this.név = név;;
 	}
 	public void setTartalom(String tartalom){
 		this.tartalom = tartalom;
@@ -72,6 +69,10 @@ public class Fájl extends Entitás{
 	 */
 	public void kiírLemezre(){
 		
+	}
+	
+	public String toString(){
+		return név;
 	}
 
 }
