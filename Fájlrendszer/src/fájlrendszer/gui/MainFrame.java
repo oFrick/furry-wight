@@ -1,11 +1,13 @@
 package fájlrendszer.gui;
 
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -22,6 +24,7 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -142,6 +145,7 @@ public class MainFrame extends JFrame {
 		//fájlrendszer = new Fájlrendszer(new DefaultMutableTreeNode("Root könyvtár"));
 		
 		explorer = new JTree(rootElement);
+		setupCellRenderer();
 		JScrollPane treeView = new JScrollPane(explorer);
 		explorer.setVisibleRowCount(15);
 		
@@ -294,6 +298,28 @@ public class MainFrame extends JFrame {
 		fájlrendszerMenü.add(betöltFájlrendszer);
 		fájlrendszerMenü.add(mentFájlrendszer);
 		fájlrendszerMenü.add(kilépés);
+	}
+	
+	private void setupCellRenderer(){
+		explorer.setCellRenderer(new DefaultTreeCellRenderer() {
+            private Icon fájlIcon = this.getDefaultLeafIcon();
+            private Icon mappaIcon = this.getDefaultClosedIcon();
+            @Override
+            public Component getTreeCellRendererComponent(JTree tree,
+                    Object value, boolean selected, boolean expanded,
+                    boolean isLeaf, int row, boolean focused) {
+                Component c = super.getTreeCellRendererComponent(tree, value,
+                        selected, expanded, isLeaf, row, focused);
+                
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
+                
+                if (node.getUserObject() instanceof Fájl)
+                    setIcon(fájlIcon);
+                else
+                    setIcon(mappaIcon);
+                return c;
+            }
+        });
 	}
 	
 	private String újElemPopup(String milyet){
