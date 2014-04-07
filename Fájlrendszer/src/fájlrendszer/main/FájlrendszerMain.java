@@ -4,6 +4,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import fájlrendszer.gui.*;
+import fájlrendszer.titkosítás.Titkosító;
+import fájlrendszer.titkosítás.titkosítóAlgoritmus.EltolóAlgoritmus;
 
 /**
  * A fájlrendszer futtatható osztálya<br/><br/>
@@ -44,6 +46,12 @@ public class FájlrendszerMain {
 			frame.addTreeNode(filmek);
 		DefaultMutableTreeNode játékok = new DefaultMutableTreeNode(new Könyvtár("Játékok"));
 			frame.addTreeNode(játékok);		
+		
+		EltolóAlgoritmus algoritmus = new EltolóAlgoritmus();
+		Titkosító titkos = new Titkosító("al", algoritmus);
+		System.out.println("\"szöveg\" titkosítva: "+titkos.titkosít("szöveg"));
+		System.out.println("visszafejtve: "+titkos.visszanyer(titkos.titkosít("szöveg")));
+		
 	}
 
 }
