@@ -1,11 +1,19 @@
 package fájlrendszer.main;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import fájlrendszer.gui.*;
+import fájlrendszer.titkosítás.KépTitkosító;
 import fájlrendszer.titkosítás.Titkosító;
+import fájlrendszer.titkosítás.titkosítóAlgoritmus.EgyszerûKépAlgoritmus;
 import fájlrendszer.titkosítás.titkosítóAlgoritmus.EltolóAlgoritmus;
+import fájlrendszer.titkosítás.titkosítóAlgoritmus.KépTitkosítóAlgoritmus;
 
 /**
  * A fájlrendszer futtatható osztálya<br/><br/>
@@ -47,10 +55,22 @@ public class FájlrendszerMain {
 		DefaultMutableTreeNode játékok = new DefaultMutableTreeNode(new Könyvtár("Játékok"));
 			frame.addTreeNode(játékok);		
 		
-		EltolóAlgoritmus algoritmus = new EltolóAlgoritmus();
-		Titkosító titkos = new Titkosító("al", algoritmus);
-		System.out.println("\"szöveg\" titkosítva: "+titkos.titkosít("szöveg"));
-		System.out.println("visszafejtve: "+titkos.visszanyer(titkos.titkosít("szöveg")));
+		EgyszerûKépAlgoritmus algoritmus = new EgyszerûKépAlgoritmus(15);
+		
+		BufferedImage kép = null;
+		
+		try {
+			kép = ImageIO.read(new File("kepem.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(kép!=null) {
+			KépTitkosító titkos = new KépTitkosító(kép, algoritmus);
+			System.out.println("\"szoveg\" titkosítva: "+titkos.titkosít("szoveg"));
+			System.out.println(titkos.visszanyer(titkos.titkosít("szoveg")));
+		}
 		
 	}
 
