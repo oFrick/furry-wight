@@ -13,10 +13,6 @@ package fájlrendszer.titkosítás.titkosítóAlgoritmus;
  */
 public abstract class TitkosítóAlgoritmus {
 	
-	public TitkosítóAlgoritmus(){
-		super();
-	}
-	
 	public abstract String kódol(String mit, String kulcs);
 	public abstract String dekódol(String mit, String kulcs);
 
