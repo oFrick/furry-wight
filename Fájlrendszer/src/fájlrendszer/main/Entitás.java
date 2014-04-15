@@ -12,10 +12,7 @@ public abstract class Entitás {
 	private Calendar módosítva;
 	
 	public Entitás(){
-		this.isRejtett=false;
-		this.isFuttatható=true;
-		this.isÍrható=true;
-		this.isTitkosított = false;
+		this(false, false);
 	}
 	
 	public Entitás(boolean isRejtett, boolean isTitkosított){
@@ -24,8 +21,8 @@ public abstract class Entitás {
 		this.isFuttatható=true;
 		this.isÍrható=true;
 		
-		létrehozva = Calendar.getInstance();
-		módosítva = Calendar.getInstance();
+		this.létrehozva = Calendar.getInstance();
+		this.módosítva = Calendar.getInstance();
 	}
 
 	public boolean isFuttatható() {
