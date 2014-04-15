@@ -1,11 +1,15 @@
 package fájlrendszer.main;
 
+import java.util.Calendar;
+
 public abstract class Entitás {
 	
 	private boolean isFuttatható;
 	private boolean isÍrható;
 	private boolean isRejtett;
 	private boolean isTitkosított;
+	private Calendar létrehozva;
+	private Calendar módosítva;
 	
 	public Entitás(){
 		this.isRejtett=false;
@@ -18,7 +22,10 @@ public abstract class Entitás {
 		this.isRejtett = isRejtett;
 		this.isTitkosított = isTitkosított;
 		this.isFuttatható=true;
-		this.isÍrható=true;		
+		this.isÍrható=true;
+		
+		létrehozva = Calendar.getInstance();
+		módosítva = Calendar.getInstance();
 	}
 
 	public boolean isFuttatható() {
@@ -36,6 +43,14 @@ public abstract class Entitás {
 	public boolean isTitkosított() {
 		return isTitkosított;
 	}
+	
+	public Calendar getMódosítva(){
+		return módosítva;
+	}
+	
+	public Calendar getLétrehozva(){
+		return létrehozva;
+	}
 
 	public void setFuttatható(boolean isFuttatható) {
 		this.isFuttatható = isFuttatható;
@@ -51,6 +66,10 @@ public abstract class Entitás {
 
 	public void setTitkosított(boolean isTitkosított) {
 		this.isTitkosított = isTitkosított;
+	}
+	
+	public void setMódosítva(Calendar módosításIdeje){
+		módosítva = módosításIdeje;
 	}
 	
 	
