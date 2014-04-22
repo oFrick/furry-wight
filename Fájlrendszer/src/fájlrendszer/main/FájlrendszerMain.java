@@ -11,6 +11,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import fájlrendszer.gui.*;
 import fájlrendszer.titkosítás.KépTitkosító;
 import fájlrendszer.titkosítás.Titkosító;
+import fájlrendszer.titkosítás.ÜzenetKezelõ;
 import fájlrendszer.titkosítás.titkosítóAlgoritmus.EgyszerûKépAlgoritmus;
 import fájlrendszer.titkosítás.titkosítóAlgoritmus.EltolóAlgoritmus;
 import fájlrendszer.titkosítás.titkosítóAlgoritmus.KépTitkosítóAlgoritmus;
@@ -71,6 +72,8 @@ public class FájlrendszerMain {
 			System.out.println("\"szoveg\" titkosítva: "+titkos.titkosít("szoveg"));
 			System.out.println(titkos.visszanyer(titkos.titkosít("szoveg")));
 		}
+		
+		//ÜzenetKezelõ.popupÜzenet("Ez egy üzenet", "ablakom címe");
 		
 	}
 

@@ -54,7 +54,7 @@ public class Fájl extends Entitás{
 	/**A fájl betöltése a lemezrõl, azaz egy elmentett fájlrendszer fájlból.<br/><br/>
 	 * 
 	 * <b>Bálint! Ezt te tudnád itt implementálni a dll-ed alapján</b>
-	 * @author Kiss Dániel
+	 * 
 	 */
 	public void betöltLemezrõl(){
 		
@@ -64,7 +64,6 @@ public class Fájl extends Entitás{
 	 * A fájl kiírása a lemezre<br/><br/>
 	 * 
 	 * <b>Bálint! Ezt te tudnád itt implementálni a dll-ed alapján</b>
-	 * @author Kiss Dániel
 	 * 
 	 */
 	public void kiírLemezre(){

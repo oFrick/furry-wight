@@ -22,7 +22,7 @@ public class Fájlrendszer {
 	 * Konstruktor.<br/><br/>
 	 * 
 	 * Egy teljesen új fájlrendszert készít
-	 * @author Kiss Dániel
+	 * 
 	 * @param rootNode - {@link DefaultMutableTreeNode}, a fa root grafikus eleme
 	 */
 	public Fájlrendszer(DefaultMutableTreeNode rootNode){
@@ -32,7 +32,7 @@ public class Fájlrendszer {
 	/**
 	 * Konstruktor, melyben eldönthetõ, hogy meglévõ, vagy új fájlrendszerrel szeretnénk dolgozni.<br/>
 	 * Meglévõ esetében fájlból be kell tölteni a fájlrendszert
-	 * @author Kiss Dániel
+	 * 
 	 * @param rootNode - {@link DefaultMutableTreeNode}, a fa root grafikus eleme
 	 * @param isÚjfájlrendszer - boolean, új fájlrendszert szeretnénk-e?
 	 */

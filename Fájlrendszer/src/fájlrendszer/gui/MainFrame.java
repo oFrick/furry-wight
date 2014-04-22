@@ -6,11 +6,15 @@ import java.awt.GridBagLayout;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -28,6 +32,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
 
+import fájlrendszer.main.Entitás;
 import fájlrendszer.main.Fájl;
 import fájlrendszer.main.Fájlrendszer;
 import fájlrendszer.main.Könyvtár;
@@ -58,6 +63,8 @@ public class MainFrame extends JFrame {
 	private JButton másolásGomb;
 	private JButton áthelyezésGomb;
 	private GridBagConstraints constraint; //Elhelyezési "kényszer"
+	private JLabel készítésIdeje;
+	private JLabel engedélyek; //rwx|rwx|rwx alakban
 	
 	//Fájlrendszer mezõk
 	private DefaultMutableTreeNode selectedNode; //A fában éppen kiválasztott node
@@ -65,7 +72,6 @@ public class MainFrame extends JFrame {
 	
 	/**
 	 * Az ablakot megvalósító osztály. Tartalmazza az egyes menüket, azok elemeit, illetve az ezekhez tartozó eseménykezelõket.
-	 * @author Kiss Dániel
 	 * @param név - String, az ablak neve
 	 */
 	public MainFrame(String név, Fájlrendszer fájlrendszer){
@@ -96,7 +102,7 @@ public class MainFrame extends JFrame {
 	
 	/**
 	 * Elhelyez egy - a grafikus megjelenítéshez használt - node-ot (ami lehet könyvtár vagy mappa) a fa struktúrában
-	 * @author Kiss Dániel
+	 * 
 	 * @param what - {@link DefaultMutableTreeNode}, amit be szeretnénk szúrni/elhelyezni
 	 * @param at - {@link DefaultMutableTreeNode}, ahová el szeretnénk helyezni
 	 */
@@ -107,7 +113,7 @@ public class MainFrame extends JFrame {
 	
 	/**
 	 * Elhelyez egy - a grafikus megjelenítéshez használt - node-ot a fa struktúra gyökerében
-	 * @author Kiss Dániel
+	 * 
 	 * @param what - {@link DefaultMutableTreeNode}, amit el szeretnénk helyezni
 	 */
 	public void addTreeNode(DefaultMutableTreeNode what){
@@ -117,7 +123,7 @@ public class MainFrame extends JFrame {
 	
 	/**
 	 * Törli a fából a grafikus megjelenítéshez használt node-ot
-	 * @author Kiss Dániel
+	 * 
 	 * @param what - {@link DefaultMutableTreeNode}, amit törölni szeretnénk
 	 */
 	public void removeTreeNode(DefaultMutableTreeNode what){
@@ -126,10 +132,6 @@ public class MainFrame extends JFrame {
 	
 	/**
 	 * A panel (azaz a grafikus felület) tartalmának betöltése, beállítása, az ottani események kezelése
-	 * @author Kiss Dániel
-	 */
-	/**
-	 * @author Kiss Dániel
 	 */
 	private void loadContent(){
 		GridBagLayout layout = new GridBagLayout();
@@ -188,7 +190,7 @@ public class MainFrame extends JFrame {
 				
 				//TODO Kiválaszott TreeNode kezelése: fájl adatainak megjelenítése, aktív(kiválasztott) TreeNode beállítása=> osztály privát adattagban
 				selectedNode = selected;
-				
+				updateAttributes();
 			}
 		});
 		
@@ -228,6 +230,19 @@ public class MainFrame extends JFrame {
 		constraint.gridx = 4;
 		constraint.gridy = 1;
 		panel.add(áthelyezésGomb, constraint);
+		
+		engedélyek = new JLabel("Engedélyek: ");
+		//constraint.gridwidth = 5;
+		constraint.weighty=0;
+		constraint.gridx = 0;
+		constraint.gridy = 2;
+		panel.add(engedélyek, constraint);
+		
+		készítésIdeje = new JLabel("Létrehozva: ");
+		constraint.weighty=0;
+		constraint.gridx = 0;
+		constraint.gridy = 3;
+		panel.add(készítésIdeje, constraint);
 		
 		//Gomb eseménykezelõk
 		
@@ -279,8 +294,32 @@ public class MainFrame extends JFrame {
 	//--------------------------------------------------------------------------------------------------------------------
 	
 	/**
+	 * A kiválasztott fájl vagy mappa attribútumainak frissítése a grafikus felületen
+	 * 
+	 */
+	private void updateAttributes(){
+		Entitás ent = (Entitás)selectedNode.getUserObject();
+		String jog = new String("Jogosultságok: ");
+		DateFormat dátumFormátum = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Calendar c = Calendar.getInstance();
+		if(ent != null){
+			if(ent.isFuttatható()) jog+="r";
+			else jog+="-";
+			if(ent.isÍrható()) jog+="w";
+			else jog+="-";
+			engedélyek.setText(jog);
+			készítésIdeje.setText("Létrehozva: "+dátumFormátum.format(ent.getLétrehozva().getTime()));
+		}
+		else{
+			engedélyek.setText("Jogosultságok: ");
+			készítésIdeje.setText("Létrehozva: ");
+		}
+		
+	}
+	
+	/**
 	 * Az ablak menüinek létrehozása és betöltése
-	 * @author Kiss Dániel
+	 * 
 	 */
 	private void loadMenus(){
 		//Példányosítás

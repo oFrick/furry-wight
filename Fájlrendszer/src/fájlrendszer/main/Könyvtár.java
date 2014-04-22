@@ -16,7 +16,7 @@ public class Könyvtár extends Entitás {
 	/**A könyvtár betöltése a lemezrõl, azaz egy elmentett fájlrendszer fájlból.<br/><br/>
 	 * 
 	 * <b>Bálint! Ezt te tudnád itt implementálni a dll-ed alapján</b>
-	 * @author Kiss Dániel
+	 * 
 	 */
 	public void betöltLemezrõl(){
 		
@@ -26,7 +26,7 @@ public class Könyvtár extends Entitás {
 	 * A könyvtár kiírása a lemezre<br/><br/>
 	 * 
 	 * <b>Bálint! Ezt te tudnád itt implementálni a dll-ed alapján</b>
-	 * @author Kiss Dániel
+	 * 
 	 * 
 	 */
 	public void kiírLemezre(){
