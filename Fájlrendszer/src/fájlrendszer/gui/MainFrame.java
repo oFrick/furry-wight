@@ -30,6 +30,8 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import fájlrendszer.main.DLLFunctions;
@@ -57,7 +59,7 @@ public class MainFrame extends JFrame {
 	private JPanel panel;
 	private JTree explorer;
 	private DefaultMutableTreeNode rootElement;
-	private DefaultTreeModel treemodel;
+	private SajatTreeModell treemodel;
 	private JButton törlésGomb;
 	private JButton újFájlGomb;
 	private JButton újMappaGomb;
@@ -143,21 +145,22 @@ public class MainFrame extends JFrame {
 		constraint = new GridBagConstraints();
 		constraint.fill = GridBagConstraints.HORIZONTAL; // Maximális szélesség, szükséges magasság
 		
-		selectedNode = null; //Alapértelmezés: nincs kiválaszott TreeNode induláskor
-		
 		panel = new JPanel(layout);
 		setContentPane(panel);
 		
 		rootElement = new DefaultMutableTreeNode(new Könyvtár("Root könyvtáram"));
+		selectedNode = rootElement; //Alapértelmezés
 		//fájlrendszer = new Fájlrendszer(new DefaultMutableTreeNode("Root könyvtár"));
 		
-		explorer = new JTree(rootElement);
+		treemodel = new SajatTreeModell(rootElement);
+		
+		explorer = new JTree(treemodel);
 		setupCellRenderer();
 		JScrollPane treeView = new JScrollPane(explorer);
 		explorer.setVisibleRowCount(15);
 		
 		//Fa eseménykezelõjének beállítása
-		treemodel = new DefaultTreeModel(rootElement);
+		//treemodel = new DefaultTreeModel(rootElement)
 		treemodel.addTreeModelListener((new TreeModelListener() {
 			
 			@Override
@@ -178,10 +181,17 @@ public class MainFrame extends JFrame {
 			
 			@Override
 			public void treeNodesChanged(TreeModelEvent e) {
-				System.out.println("TreeNode megváltozott!");
+				Entitás ent = (Entitás)selectedNode.getUserObject();
+				//TODO Megvalósítani a dll-ben!!!!! dll.rename(ent.getNév());
 			}
+			
+			
 		}));
+		
+		treemodel.reload();
+		
 		explorer.setEditable(true);
+		
 		
 		//Kiválasztásos eseménykezelés beállítása
 		explorer.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);	
@@ -193,12 +203,20 @@ public class MainFrame extends JFrame {
 				
 				if(selected == null) return; //Ha nincs kiválasztva semmi, akkor kilépünk a függvénybõl
 				
+				
+				
 				//TODO Kiválaszott TreeNode kezelése: fájl adatainak megjelenítése, aktív(kiválasztott) TreeNode beállítása=> osztály privát adattagban
+				
+				//Kiválasztjuk a fájlt/mappát, amire kattintottunk
 				selectedNode = selected;
+				
+				Entitás ent = (Entitás)selectedNode.getUserObject();
+				//TODO Megvalósítani a dll-ben!!!!! dll.select(ent.getNév());
+				
 				updateAttributes();
 			}
+			
 		});
-		
 		
 		constraint.gridwidth = 5; //Három oszlop széles
 		constraint.gridx = 0; //0. sor
@@ -363,7 +381,9 @@ public class MainFrame extends JFrame {
                     setIcon(mappaIcon);
                 return c;
             }
+            
         });
+		
 	}
 	
 	private String újElemPopup(String milyet){

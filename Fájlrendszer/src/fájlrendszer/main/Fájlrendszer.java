@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import fájlrendszer.gui.MainFrame;
+
 /**
  * A fájlok/mappák tárolására, a merevlemez funkcióinak magas szinten történõ megvalósítására szolgáló osztály.<br>
  * A fájlokat/mappákat csak tároljuk, elérésük a {@link DefaultMutableTreeNode} típusú adattagjukon keresztül történik közvetlenül
@@ -25,8 +27,10 @@ public class Fájlrendszer {
 	 * 
 	 * @param rootNode - {@link DefaultMutableTreeNode}, a fa root grafikus eleme
 	 */
-	public Fájlrendszer(DefaultMutableTreeNode rootNode){
-		this(rootNode, true);
+	public Fájlrendszer(MainFrame frame, String rootName){
+		this.root = new Könyvtár(rootName);
+		frame.addTreeNode(new DefaultMutableTreeNode(root));
+		
 	}
 	
 	/**

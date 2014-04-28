@@ -51,10 +51,11 @@ public class FájlrendszerMain {
 	
 	public static void DaniTeszt(){
 		
-		DefaultMutableTreeNode filmek = new DefaultMutableTreeNode(new Könyvtár("Filmek")); //Filmek könyvtár
+		/*DefaultMutableTreeNode filmek = new DefaultMutableTreeNode(new Könyvtár("Filmek")); //Filmek könyvtár
 			frame.addTreeNode(filmek);
 		DefaultMutableTreeNode játékok = new DefaultMutableTreeNode(new Könyvtár("Játékok"));
 			frame.addTreeNode(játékok);		
+		*/
 		
 		EgyszerûKépAlgoritmus algoritmus = new EgyszerûKépAlgoritmus(15);
 		
