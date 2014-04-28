@@ -148,4 +148,19 @@ public class DLLFunctions {
      * @param name név
      */
     public native void createDirectory(String name);
+
+
+
+    /**
+     * Kiválaszt egy fájl az aktuális mappából, de nem nyitja meg. Ha a bemenõ paraméter null, akkor nincs
+     * kijelölés (tipikusan könyvtárváltás után)
+     * @param nev
+     */
+    public native void select(String nev);
+    
+	/**
+	 * A mit-ben megadott fájlt/mappát átnevezi. Ez nem vonatkozik az akuális mappa nevére.
+	 * @param nev String
+	 */
+	public native void rename(String ujNev);
 }
