@@ -6,26 +6,11 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 public class Könyvtár extends Entitás {
 	
-	private String név;
 	
 	public Könyvtár(String név){
-		super();
-		this.név = név;
+		super(név);
 	}
 	
-	/**
-	 * @return the név
-	 */
-	public String getNév() {
-		return név;
-	}
-
-	/**
-	 * @param név the név to set
-	 */
-	public void setNév(String név) {
-		this.név = név;
-	}
 
 	/**A könyvtár betöltése a lemezrõl, azaz egy elmentett fájlrendszer fájlból.<br/><br/>
 	 * 
@@ -48,7 +33,7 @@ public class Könyvtár extends Entitás {
 	}
 	
 	public String toString(){
-		return név;
+		return getNév();
 	}
 
 }

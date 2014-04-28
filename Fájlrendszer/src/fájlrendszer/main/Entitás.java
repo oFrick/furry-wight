@@ -11,11 +11,27 @@ public abstract class Entitás {
 	private Calendar létrehozva;
 	private Calendar módosítva;
 	
-	public Entitás(){
-		this(false, false, Calendar.getInstance());
+	private String név;
+	
+	/**
+	 * @return the név
+	 */
+	public String getNév() {
+		return név;
+	}
+
+	/**
+	 * @param név the név to set
+	 */
+	public void setNév(String név) {
+		this.név = név;
+	}
+
+	public Entitás(String név){
+		this(név, false, false, Calendar.getInstance());
 	}
 	
-	public Entitás(boolean isRejtett, boolean isTitkosított, Calendar létrehozva){
+	public Entitás(String név, boolean isRejtett, boolean isTitkosított, Calendar létrehozva){
 		this.isRejtett = isRejtett;
 		this.isTitkosított = isTitkosított;
 		this.isFuttatható=true;
@@ -23,6 +39,8 @@ public abstract class Entitás {
 		
 		this.módosítva = Calendar.getInstance();
 		this.létrehozva = létrehozva;
+		
+		this.név = név;
 	}
 
 	public boolean isFuttatható() {

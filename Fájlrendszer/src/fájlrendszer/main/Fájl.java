@@ -17,26 +17,20 @@ public class Fájl extends Entitás{
 	
 	private Fájltípus fájltípus; //A fájl kiterjesztése
 	private String tartalom; //A fájl tartalma
-	private String név;
 	
 	private int méret; //A fájl mérete byte-ban
 	private static final int defaultMéret=1; //A fájl tartalmának egy elemi részegységéhez (pl szövegben betû, képben pixel) tartozó byte-ban megadott méretszükséglet
 	
 	public Fájl(String név){
-		super();
+		super(név);
 		
-		this.név = név;
 		this.fájltípus = Fájltípus.DEFAULT;
 		
 	}
 	
 	public int getMéret() {return méret;}
-	public String getNév() {return név;}
 	public String getTartalom() {return tartalom;}
 	
-	public void setNév(String név){
-		this.név = név;;
-	}
 	public void setTartalom(String tartalom){
 		this.tartalom = tartalom;
 	}
@@ -71,7 +65,7 @@ public class Fájl extends Entitás{
 	}
 	
 	public String toString(){
-		return név;
+		return getNév();
 	}
 
 }
