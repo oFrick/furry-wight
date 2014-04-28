@@ -13,6 +13,20 @@ public class Könyvtár extends Entitás {
 		this.név = név;
 	}
 	
+	/**
+	 * @return the név
+	 */
+	public String getNév() {
+		return név;
+	}
+
+	/**
+	 * @param név the név to set
+	 */
+	public void setNév(String név) {
+		this.név = név;
+	}
+
 	/**A könyvtár betöltése a lemezrõl, azaz egy elmentett fájlrendszer fájlból.<br/><br/>
 	 * 
 	 * <b>Bálint! Ezt te tudnád itt implementálni a dll-ed alapján</b>
