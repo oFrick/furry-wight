@@ -32,6 +32,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
 
+import fájlrendszer.main.DLLFunctions;
 import fájlrendszer.main.Entitás;
 import fájlrendszer.main.Fájl;
 import fájlrendszer.main.Fájlrendszer;
@@ -69,6 +70,7 @@ public class MainFrame extends JFrame {
 	//Fájlrendszer mezõk
 	private DefaultMutableTreeNode selectedNode; //A fában éppen kiválasztott node
 	private Fájlrendszer fájlrendszer;
+	private DLLFunctions dll;
 	
 	/**
 	 * Az ablakot megvalósító osztály. Tartalmazza az egyes menüket, azok elemeit, illetve az ezekhez tartozó eseménykezelõket.
@@ -88,6 +90,9 @@ public class MainFrame extends JFrame {
 		loadContent();
 		
 		this.setVisible(true); //Láthatóvá teszem
+		
+		dll = new DLLFunctions("D:\\Munka\\Egyetem\\git\\Fájlrendszer-local\\Fájlrendszer\\filesystem.dll");
+		dll.formatDisk(32);
 		
 		//Eseménykezelõk
 		kilépés.addActionListener(new ActionListener() { //Kilépés
