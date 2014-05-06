@@ -93,7 +93,7 @@ public class MainFrame extends JFrame {
 		
 		this.setVisible(true); //Láthatóvá teszem
 		
-		dll = new DLLFunctions("D:\\Munka\\Egyetem\\git\\Fájlrendszer-local\\Fájlrendszer\\filesystem.dll");
+		dll = new DLLFunctions("D:\\Munka\\Egyetem\\git\\Fájlrendszer-local\\Fájlrendszer\\filesystem2.dll");
 		dll.formatDisk(32);
 		
 		//Eseménykezelõk
@@ -206,9 +206,20 @@ public class MainFrame extends JFrame {
 				
 				
 				//TODO Kiválaszott TreeNode kezelése: fájl adatainak megjelenítése, aktív(kiválasztott) TreeNode beállítása=> osztály privát adattagban
+				//Bezárjuk az elõzõleg megnyitott fájlt
+				if (selectedNode.getUserObject() instanceof Fájl) dll.fileClose(0);
 				
 				//Kiválasztjuk a fájlt/mappát, amire kattintottunk
 				selectedNode = selected;
+				
+				//Megnyitás
+				if (selectedNode.getUserObject() instanceof Fájl){
+					Fájl f = (Fájl)selectedNode.getUserObject();
+					dll.fileOpen(f.getNév());
+				}else{
+					Könyvtár k = (Könyvtár)selectedNode.getUserObject();
+					dll.changeDirectory(k.getNév());
+				}
 				
 				Entitás ent = (Entitás)selectedNode.getUserObject();
 				//TODO Megvalósítani a dll-ben!!!!! dll.select(ent.getNév());

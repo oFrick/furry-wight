@@ -1,6 +1,5 @@
 package fájlrendszer.main;
 
-
 /**
  *
  * @author Bálint
@@ -48,7 +47,7 @@ public class DLLFunctions {
      * @param name a fájl neve, csak az aktív mappában lévõ fájl nyitható meg
      * @return handle a fájlra; a továbbiakban ezzel azonosítható, 0 ha nem sikerült megnyitni
      */
-    native int fileOpen(String name);
+    public native int fileOpen(String name);
     
 
 
@@ -117,10 +116,31 @@ public class DLLFunctions {
      * Lezárja a fájlt, innentõl nem lesz elérhetõ. A fájl lemezre íródik, ha módosult.
      * @param handle fájlazonosító
      */
-    native void fileClose(int handle);
+    public native void fileClose(int handle);
     
-
-
+    /**
+     * IMPLEMENTÁLVA
+     * Áthelyezi a handle-vel azonosított fájlt/mappát az éppen aktív mappába.
+     * @param handle fájlazonosító
+     */
+    native void fileMove(int handle);
+    
+    
+    /**
+     * IMPLEMENTÁLVA
+     * Átmásolja a handle-vel azonosított fájlt az éppen aktív mappába. Az összes fájl-attribútum is másolásra kerül.
+     * A metódus nem hívható meg mappákra.
+     * @param handle fájlazonosító
+     */
+    native void fileCopy(int handle);
+    
+    
+    /**
+     * IMPLEMENTÁLVA
+     * Átnevezi a fájlt/mappát.
+     * @param to a fájl/mappa új neve
+     */
+    public native void renameFile(String to);
 
 
     /**
@@ -128,8 +148,7 @@ public class DLLFunctions {
      * Fájl vagy mappa törlése.
      * @param name név
      */
-    public native void deleteFile(String name);
-    
+    native void deleteFile(String name);
 
 
     /**
@@ -137,7 +156,7 @@ public class DLLFunctions {
      * Új fájl létrehozása.
      * @param name név
      */
-    public native void createFile(String name);
+    native void createFile(String name);
     
 
 
@@ -147,20 +166,5 @@ public class DLLFunctions {
      * Új mappa létrehozása.
      * @param name név
      */
-    public native void createDirectory(String name);
-
-
-
-    /**
-     * Kiválaszt egy fájl az aktuális mappából, de nem nyitja meg. Ha a bemenõ paraméter null, akkor nincs
-     * kijelölés (tipikusan könyvtárváltás után)
-     * @param nev
-     */
-    public native void select(String nev);
-    
-	/**
-	 * A mit-ben megadott fájlt/mappát átnevezi. Ez nem vonatkozik az akuális mappa nevére.
-	 * @param nev String
-	 */
-	public native void rename(String ujNev);
+    native void createDirectory(String name);
 }

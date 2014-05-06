@@ -12,7 +12,22 @@ public abstract class Entitás {
 	private Calendar módosítva;
 	
 	private String név;
+	private int handle;
 	
+	/**
+	 * @return the handle
+	 */
+	public int getHandle() {
+		return handle;
+	}
+
+	/**
+	 * @param handle the handle to set
+	 */
+	public void setHandle(int handle) {
+		this.handle = handle;
+	}
+
 	/**
 	 * @return the név
 	 */
