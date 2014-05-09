@@ -36,7 +36,7 @@ public class DLLFunctions {
      * Kilistázza az aktuális könyvtárban található fájlok és mappák nevét.
      * @return fájlnevek
      */
-    native String[] list();
+    public native String[] list();
 
 
 
@@ -58,7 +58,7 @@ public class DLLFunctions {
      * @param data adat
      * @see fileOpen(String name)
      */
-    native void fileSetData(int handle, byte[] data);
+    public native void fileSetData(int handle, byte[] data);
     
 
 
@@ -68,7 +68,7 @@ public class DLLFunctions {
      * @param data adat
      * @see fileOpen(String name)
      */
-    native void fileAppendData(int handle, byte[] data);
+    public native void fileAppendData(int handle, byte[] data);
     
     //adat beszúrása bárhova
     //native void fileInsertData(int handle, byte[] data, long where);
@@ -81,35 +81,35 @@ public class DLLFunctions {
      * @param size mennyit?
      * @see fileOpen(String name)
      */
-    native void fileEraseData(int handle, long from, long size);
+    public native void fileEraseData(int handle, long from, long size);
     
     /**
      * Adatlekérés.
      * @param handle fájlazonosító
      * @return a fájlban lévõ adat bájt tömbben
      */
-    native byte[] fileGetData(int handle);
+    public native byte[] fileGetData(int handle);
     
     
     //attribútum accessorok
     //IMPLEMENTÁLVA
-    native void fileSetEncryption(int handle, boolean x);
-    native void fileSetHidden(int handle, boolean x);
-    native void fileSetReadPermission(int handle, boolean x);
-    native void fileSetWritePermission(int handle, boolean x);
-    native void fileSetExecPermission(int handle, boolean x);
-    native void fileSetLastRead(int handle, long x);
-    native void fileSetLastWritten(int handle, long x);
-    native void fileSetLastExecuted(int handle, long x);
+    public native void fileSetEncryption(int handle, boolean x);
+    public native void fileSetHidden(int handle, boolean x);
+    public native void fileSetReadPermission(int handle, boolean x);
+    public native void fileSetWritePermission(int handle, boolean x);
+    public native void fileSetExecPermission(int handle, boolean x);
+    public native void fileSetLastRead(int handle, long x);
+    public native void fileSetLastWritten(int handle, long x);
+    public native void fileSetLastExecuted(int handle, long x);
     
-    native boolean fileIsEncrypted(int handle);
-    native boolean fileIsHidden(int handle);
-    native boolean fileIsReadable(int handle);
-    native boolean fileIsWritable(int handle);
-    native boolean fileIsExecutable(int handle);
-    native long fileGetLastRead(int handle);
-    native long fileGetLastWritten(int handle);
-    native long fileGetLastExecuted(int handle);
+    public native boolean fileIsEncrypted(int handle);
+    public native boolean fileIsHidden(int handle);
+    public native boolean fileIsReadable(int handle);
+    public native boolean fileIsWritable(int handle);
+    public native boolean fileIsExecutable(int handle);
+    public native long fileGetLastRead(int handle);
+    public native long fileGetLastWritten(int handle);
+    public native long fileGetLastExecuted(int handle);
     
     /**
      * IMPLEMENTÁLVA & TESZTELVE
@@ -123,7 +123,7 @@ public class DLLFunctions {
      * Áthelyezi a handle-vel azonosított fájlt/mappát az éppen aktív mappába.
      * @param handle fájlazonosító
      */
-    native void fileMove(int handle);
+    public native void fileMove(int handle);
     
     
     /**
@@ -132,7 +132,7 @@ public class DLLFunctions {
      * A metódus nem hívható meg mappákra.
      * @param handle fájlazonosító
      */
-    native void fileCopy(int handle);
+    public native void fileCopy(int handle);
     
     
     /**
@@ -148,7 +148,7 @@ public class DLLFunctions {
      * Fájl vagy mappa törlése.
      * @param name név
      */
-    native void deleteFile(String name);
+    public native void deleteFile(String name);
 
 
     /**
@@ -156,7 +156,7 @@ public class DLLFunctions {
      * Új fájl létrehozása.
      * @param name név
      */
-    native void createFile(String name);
+    public native void createFile(String name);
     
 
 
@@ -166,5 +166,5 @@ public class DLLFunctions {
      * Új mappa létrehozása.
      * @param name név
      */
-    native void createDirectory(String name);
+    public native void createDirectory(String name);
 }
