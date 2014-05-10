@@ -108,20 +108,6 @@ public class MainFrame extends JFrame {
 				
 			}
 		});
-		
-		createDirectory("dani");
-		changeDirectory("/root/dani");
-		createDirectory("gomba");
-		createDirectory("alma");
-		rename("gomba", "körte");
-		createFile("ház");
-		changeDirectory("ház");
-		changeDirectory("körte");
-		changeDirectory("alma");
-		changeDirectory("..");
-		createFile("Daniban.txt");
-		changeDirectory("root");
-		createFile("rootom.txt");
 	}
 	
 	/**
