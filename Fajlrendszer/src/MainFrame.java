@@ -101,6 +101,7 @@ public class MainFrame extends JFrame {
 		loadMenus();
 		loadContent();
 		
+		
 		this.setVisible(true); //Láthatóvá teszem
 		
 		//Eseménykezelõk
