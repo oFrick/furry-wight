@@ -8,7 +8,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -94,7 +96,7 @@ public class MainFrame extends JFrame {
 		this.setVisible(true); //Láthatóvá teszem
 		
 		dll = new DLLFunctions("D:\\Munka\\Egyetem\\git\\Fájlrendszer-local\\Fájlrendszer\\filesystem2.dll");
-		dll.formatDisk(32);
+		//dll.formatDisk(32);
 		
 		//Eseménykezelõk
 		kilépés.addActionListener(new ActionListener() { //Kilépés
@@ -203,15 +205,10 @@ public class MainFrame extends JFrame {
 				
 				if(selected == null) return; //Ha nincs kiválasztva semmi, akkor kilépünk a függvénybõl
 				
-				
-				
-				//TODO Kiválaszott TreeNode kezelése: fájl adatainak megjelenítése, aktív(kiválasztott) TreeNode beállítása=> osztály privát adattagban
-				//Bezárjuk az elõzõleg megnyitott fájlt
-				if (selectedNode.getUserObject() instanceof Fájl) dll.fileClose(0);
-				
 				//Kiválasztjuk a fájlt/mappát, amire kattintottunk
 				selectedNode = selected;
 				
+				/*
 				//Megnyitás
 				if (selectedNode.getUserObject() instanceof Fájl){
 					Fájl f = (Fájl)selectedNode.getUserObject();
@@ -220,9 +217,9 @@ public class MainFrame extends JFrame {
 					Könyvtár k = (Könyvtár)selectedNode.getUserObject();
 					dll.changeDirectory(k.getNév());
 				}
+				*/
 				
 				Entitás ent = (Entitás)selectedNode.getUserObject();
-				//TODO Megvalósítani a dll-ben!!!!! dll.select(ent.getNév());
 				
 				updateAttributes();
 			}
@@ -286,11 +283,7 @@ public class MainFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Új fájl létrehozása - fájl objektum példányosítása
-				
-				Fájl fájl = new Fájl(újElemPopup("fájl"));
-				
-				if(selectedNode == null) addTreeNode(new DefaultMutableTreeNode(fájl));
-				else if(selectedNode.getUserObject() instanceof Könyvtár) addTreeNode(new DefaultMutableTreeNode(fájl), selectedNode);
+				createFile(újElemPopup("fájl"));
 				
 			}
 		});
@@ -302,10 +295,7 @@ public class MainFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Új könyvtár létrehozása - könyvtár objektum példányosítása
 				
-				Könyvtár könyvtár = new Könyvtár(újElemPopup("könyvtár"));
-				
-				if(selectedNode == null) addTreeNode(new DefaultMutableTreeNode(könyvtár));
-				else if(selectedNode.getUserObject() instanceof Könyvtár) addTreeNode(new DefaultMutableTreeNode(könyvtár), selectedNode);
+				createDirectory(újElemPopup("könyvtár"));
 				
 			}
 		});
@@ -317,6 +307,8 @@ public class MainFrame extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Fájl törlés esemény implementálása a Fájl objektummal
 				if(selectedNode != null) {
+					Entitás ent = (Entitás)selectedNode.getUserObject();
+					dll.deleteFile(ent.getNév());
 					removeTreeNode(selectedNode);
 					selectedNode = null; //Törlés után állítsuk null-ra a kiválasztott TreeNode-ot, különben BUG-ot kapunk!
 				}
@@ -409,5 +401,60 @@ public class MainFrame extends JFrame {
 		return szövegmezõ.getText();
 		
 	}
-
+	/**
+	 * Megadja, hogy melyik az épp aktuális könyvtár, amiben vagyunk. Ha épp egy fájl van
+	 * kijelölve, akkor a fájlt tartalmazó könyvtárral tér vissza, egyébként a kiválasztott könyvtárral.
+	 * @return
+	 */
+	private DefaultMutableTreeNode getWorkingDirectory(){
+		if (selectedNode.getUserObject() instanceof Könyvtár) return selectedNode;
+		else return (DefaultMutableTreeNode) selectedNode.getParent();
+	}
+	
+	/**Visszatér a sztring nevû nodedal, ha az aktuális mappa tartalmazza azt a node-ot. Egyébként null a visz.érték
+	 * @author Kiss Dániel
+	 * @param mit
+	 * @return
+	 */
+	private DefaultMutableTreeNode tartalmaz(String mit){
+		DefaultMutableTreeNode wDir = getWorkingDirectory();
+		
+		for(int i=0; i<wDir.getChildCount(); i++){
+			Entitás ent = (Entitás) ((DefaultMutableTreeNode) wDir.getChildAt(i)).getUserObject();
+			if(ent.getNév().equals(mit)) return (DefaultMutableTreeNode) wDir.getChildAt(i);
+		}
+		return null;
+	}
+	
+	public void createFile(String név){
+		Fájl fájl = new Fájl(név);
+		//dll.createFile(fájl.getNév());
+		
+		if(selectedNode == null) addTreeNode(new DefaultMutableTreeNode(fájl));
+		else if(selectedNode.getUserObject() instanceof Könyvtár) addTreeNode(new DefaultMutableTreeNode(fájl), selectedNode);
+	}
+	public void createDirectory(String név){
+		Könyvtár könyvtár = new Könyvtár(név);
+		//dll.createDirectory(könyvtár.getNév());
+		
+		if(selectedNode == null) addTreeNode(new DefaultMutableTreeNode(könyvtár));
+		else if(selectedNode.getUserObject() instanceof Könyvtár) addTreeNode(new DefaultMutableTreeNode(könyvtár), selectedNode);
+	}
+	
+	public void rename(String mit, String mire){
+		
+		DefaultMutableTreeNode wDir = getWorkingDirectory(); //Aktuális munkakönyvtár
+		boolean siker = false;
+			
+		for(int i=0; i<wDir.getChildCount(); i++){
+			Entitás ent = (Entitás) ((DefaultMutableTreeNode) wDir.getChildAt(i)).getUserObject();
+			if(ent.getNév() == mit){
+				ent.setNév(mire);
+				siker = true;
+				break;
+			}
+		}
+		
+		if(!siker) Seged.popup("Nincs ilyen könytár/fájl: "+mit+"!", "Átnevezés sikertelen!", this);
+	}
 }
