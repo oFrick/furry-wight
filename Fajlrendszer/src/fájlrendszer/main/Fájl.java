@@ -21,8 +21,8 @@ public class Fájl extends Entitás{
 	private int méret; //A fájl mérete byte-ban
 	private static final int defaultMéret=1; //A fájl tartalmának egy elemi részegységéhez (pl szövegben betû, képben pixel) tartozó byte-ban megadott méretszükséglet
 	
-	public Fájl(String név){
-		super(név);
+	public Fájl(String név, int handle){
+		super(név, handle);
 		
 		this.fájltípus = Fájltípus.DEFAULT;
 		

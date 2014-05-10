@@ -43,8 +43,9 @@ public abstract class Entitás {
 		this.név = név;
 	}
 
-	public Entitás(String név){
+	public Entitás(String név, int handle){
 		this(név, false, false, Calendar.getInstance());
+		this.handle = handle;
 	}
 	
 	public Entitás(String név, boolean isRejtett, boolean isTitkosított, Calendar létrehozva){

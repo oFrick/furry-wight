@@ -24,6 +24,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TreeModelEvent;
@@ -49,6 +50,8 @@ import fájlrendszer.main.Könyvtár;
  */
 public class MainFrame extends JFrame {
 	
+	public boolean debug;
+	
 	//Menü mezõk
 	private JMenuBar menüsor;
 	private JMenu fájlrendszerMenü;
@@ -70,6 +73,8 @@ public class MainFrame extends JFrame {
 	private GridBagConstraints constraint; //Elhelyezési "kényszer"
 	private JLabel készítésIdeje;
 	private JLabel engedélyek; //rwx|rwx|rwx alakban
+	private JTextArea tartalom;
+	private JButton ment;
 	
 	//Fájlrendszer mezõk
 	private DefaultMutableTreeNode selectedNode; //A fában éppen kiválasztott node
@@ -157,7 +162,7 @@ public class MainFrame extends JFrame {
 		panel = new JPanel(layout);
 		setContentPane(panel);
 		
-		rootElement = new DefaultMutableTreeNode(new Könyvtár("root"));
+		rootElement = new DefaultMutableTreeNode(new Könyvtár("root",0));
 		selectedNode = rootElement; //Alapértelmezés
 		
 		treemodel = new SajatTreeModell(rootElement);
@@ -234,8 +239,20 @@ public class MainFrame extends JFrame {
 						Seged.popup("Hibás mûvelet: nem lehet így mappát/fájlt kiválasztani!", "Hibás kijelölés", sajat);
 						System.out.println("Aktuális hely: "+((Entitás)getWorkingDirectory().getUserObject()).getNév());
 					}
+					tartalom.setText("");
+					tartalom.setEnabled(false);
+					ment.setEnabled(false);
+					
 				}else{
 					selectedNode = selected;
+					byte[] b;
+					if(debug){
+						b = dll.fileGetData(((Entitás)selectedNode.getUserObject()).getHandle());
+						tartalom.setEnabled(true);
+						tartalom.setText(new String(b));
+						ment.setEnabled(true);
+					}
+					
 				}
 				
 				//selectedNode = selected;
@@ -296,7 +313,26 @@ public class MainFrame extends JFrame {
 		constraint.gridy = 3;
 		panel.add(készítésIdeje, constraint);
 		
+		tartalom = new JTextArea(10, 1);
+		constraint.gridy = 4;
+		constraint.weighty = 1;
+		constraint.gridwidth = 4;
+		panel.add(tartalom, constraint);
+		
+		ment = new JButton("Mentés");
+		constraint.gridy = 5;
+		constraint.gridwidth = 1;
+		panel.add(ment, constraint);
+		
 		//Gomb eseménykezelõk
+		
+		ment.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(selectedNode.getUserObject() instanceof Fájl) dll.fileSetData(((Entitás)selectedNode.getUserObject()).getHandle(), tartalom.getText().getBytes());
+			}
+		});
 		
 		újFájlGomb.addActionListener(new ActionListener() {
 			
@@ -469,20 +505,24 @@ public class MainFrame extends JFrame {
 	}
 	
 	public void createFile(String név){
-		Fájl fájl = new Fájl(név);
+		Fájl fájl = new Fájl(név,0);
+		
 		if(dll.createFile(fájl.getNév())){
 			if(selectedNode == null) addTreeNode(new DefaultMutableTreeNode(fájl));
 			else if(selectedNode.getUserObject() instanceof Könyvtár) addTreeNode(new DefaultMutableTreeNode(fájl), selectedNode);
 		}	
+		
+		int handle = dll.fileOpen(név);
+		fájl.setHandle(handle);
+		dll.fileClose(handle);
 	}
 	
 	public void createDirectory(String név){
-		Könyvtár könyvtár = new Könyvtár(név);
+		Könyvtár könyvtár = new Könyvtár(név,0);
 		if(dll.createDirectory(könyvtár.getNév())){
 			if(selectedNode == null) addTreeNode(new DefaultMutableTreeNode(könyvtár));
 			else if(selectedNode.getUserObject() instanceof Könyvtár) addTreeNode(new DefaultMutableTreeNode(könyvtár), selectedNode);
-		}
-		
+		}		
 		
 	}
 	

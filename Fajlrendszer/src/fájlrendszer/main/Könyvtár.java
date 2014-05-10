@@ -7,8 +7,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 public class Könyvtár extends Entitás {
 	
 	
-	public Könyvtár(String név){
-		super(név);
+	public Könyvtár(String név, int handle){
+		super(név, handle);
 	}
 	
 
