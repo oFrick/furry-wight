@@ -12,6 +12,7 @@ public abstract class Entitás {
 	private Calendar módosítva;
 	
 	private String név;
+	private String oldName;
 	private int handle;
 	
 	/**
@@ -56,6 +57,8 @@ public abstract class Entitás {
 		this.létrehozva = létrehozva;
 		
 		this.név = név;
+		this.oldName = név;
+		this.handle = 0;
 	}
 
 	public boolean isFuttatható() {

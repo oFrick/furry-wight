@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -107,6 +108,20 @@ public class MainFrame extends JFrame {
 				
 			}
 		});
+		
+		createDirectory("dani");
+		changeDirectory("/root/dani");
+		createDirectory("gomba");
+		createDirectory("alma");
+		rename("gomba", "körte");
+		createFile("ház");
+		changeDirectory("ház");
+		changeDirectory("körte");
+		changeDirectory("alma");
+		changeDirectory("..");
+		createFile("Daniban.txt");
+		changeDirectory("root");
+		createFile("rootom.txt");
 	}
 	
 	/**
@@ -441,6 +456,10 @@ public class MainFrame extends JFrame {
 		else if(selectedNode.getUserObject() instanceof Könyvtár) addTreeNode(new DefaultMutableTreeNode(könyvtár), selectedNode);
 	}
 	
+	/**A jelenlegi könyvtárban lévõ, adott nevû elemet átnevezi. Csak parancsértelemzõvel kell ezt használni.
+	 * @param mit
+	 * @param mire
+	 */
 	public void rename(String mit, String mire){
 		
 		DefaultMutableTreeNode wDir = getWorkingDirectory(); //Aktuális munkakönyvtár
@@ -456,5 +475,34 @@ public class MainFrame extends JFrame {
 		}
 		
 		if(!siker) Seged.popup("Nincs ilyen könytár/fájl: "+mit+"!", "Átnevezés sikertelen!", this);
+	}
+	
+	/**Átváltja az aktuális könyvtárat a megadott útvonalnak megfelelõ könyvtárba.
+	 * @param hova
+	 */
+	public void changeDirectory(String hova){
+		StringTokenizer st = new StringTokenizer(hova,"/");
+		while(st.hasMoreTokens()){
+			String nev = st.nextToken();
+			if(nev.equals("root")){ //Gyökérbe váltás
+				selectedNode = rootElement;
+				//dll.changeDirectory(".");
+			}else if(nev.equals("..")){ //Szülõ mappába váltás
+				selectedNode = (DefaultMutableTreeNode) selectedNode.getParent();
+				//dll.changeDirectory("..");
+			}else{ //Almappába váltás
+				DefaultMutableTreeNode cel = tartalmaz(nev);
+				if(cel != null){ //Ha van ilyen alkönyvtár
+					if(cel.getUserObject() instanceof Könyvtár){ //Ha a cél egy könyvtár
+						selectedNode = cel;
+						//dll.changeDirectory(nev);
+					}else Seged.popup("Ez nem könyvtár: "+nev+"!", "Nem könyvtár", this);
+				} else{
+					Seged.popup("Nincs ilyen könyvtár/alkönyvtár: "+nev+" itt: "+((Entitás)selectedNode.getUserObject()).getNév()+"!", "Sikertelen könyvtárváltás!", this);
+					break;
+				}
+			}
+		}
+		
 	}
 }
