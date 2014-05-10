@@ -50,7 +50,7 @@ import fájlrendszer.main.Könyvtár;
  */
 public class MainFrame extends JFrame {
 	
-	public boolean debug;
+	public boolean debug = true;
 	
 	//Menü mezõk
 	private JMenuBar menüsor;
@@ -100,7 +100,6 @@ public class MainFrame extends JFrame {
 		
 		loadMenus();
 		loadContent();
-		
 		
 		this.setVisible(true); //Láthatóvá teszem
 		
@@ -248,10 +247,17 @@ public class MainFrame extends JFrame {
 					selectedNode = selected;
 					byte[] b;
 					if(debug){
-						b = dll.fileGetData(((Entitás)selectedNode.getUserObject()).getHandle());
-						tartalom.setEnabled(true);
-						tartalom.setText(new String(b));
-						ment.setEnabled(true);
+						
+						if(dll.fileOpen(((Entitás)selectedNode.getUserObject()).getNév()) != 0){
+							
+							b = dll.fileGetData(((Entitás)selectedNode.getUserObject()).getHandle());
+							dll.fileClose(((Entitás)selectedNode.getUserObject()).getHandle());
+							
+							tartalom.setEnabled(true);
+							tartalom.setText(new String(b));
+							ment.setEnabled(true);
+						}
+						
 					}
 					
 				}
@@ -331,7 +337,11 @@ public class MainFrame extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if(selectedNode.getUserObject() instanceof Fájl) dll.fileSetData(((Entitás)selectedNode.getUserObject()).getHandle(), tartalom.getText().getBytes());
+				if(selectedNode.getUserObject() instanceof Fájl){
+					dll.fileOpen(((Entitás)selectedNode.getUserObject()).getNév());
+					dll.fileSetData(((Entitás)selectedNode.getUserObject()).getHandle(), tartalom.getText().getBytes());
+					dll.fileClose(((Entitás)selectedNode.getUserObject()).getHandle());
+				}
 			}
 		});
 		
