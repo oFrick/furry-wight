@@ -82,7 +82,6 @@ public class MainFrame extends JFrame {
 	private DLLFunctions dll;
 	private MainFrame sajat;
 	
-	
 	/**
 	 * Az ablakot megvalósító osztály. Tartalmazza az egyes menüket, azok elemeit, illetve az ezekhez tartozó eseménykezelõket.
 	 * @param név - String, az ablak neve
