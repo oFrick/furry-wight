@@ -50,7 +50,7 @@ import fájlrendszer.main.Könyvtár;
  */
 public class MainFrame extends JFrame {
 	
-	public boolean debug = true;
+	public boolean debug = false;
 	
 	//Menü mezõk
 	private JMenuBar menüsor;
@@ -96,7 +96,7 @@ public class MainFrame extends JFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Ablakbezárás esemény kezelése
 		
 		dll = new DLLFunctions(DLLFunctions.class.getProtectionDomain().getCodeSource().getLocation().getPath()+"filesystem.dll");
-		dll.formatDisk(32);
+		dll.formatDisk(1024);
 		
 		loadMenus();
 		loadContent();
@@ -112,12 +112,34 @@ public class MainFrame extends JFrame {
 				
 			}
 		});
+		
 		/*
-		createDirectory("elsõ");
-		createFile("fileom.txt");
-		changeDirectory("elsõ");
-		createFile("valami.txt");
+		dll.createFile("valami");
+		dll.createDirectory("Ide");
+		
+		int handle = dll.fileOpen("valami");
+		if(handle != 0){
+			dll.changeDirectory("Ide");
+			dll.fileCopy(1);
+			System.out.println("Sikerült! "+handle);
+		}else{
+			System.out.println("Nem sikerült!");
+		}
 		*/
+		
+		//createDirectory("elso");
+		//createFile("fileom");
+		//createDirectory("dani");
+		//changeDirectory("elsõ");
+		//createFile("valami.txt");
+		//changeDirectory("root/elsõ");
+		//útvonalFejt("root/elsõ/valami.txt");
+		//replace("root/fileom.txt","root/elsõ");
+		
+		//copy("root/fileom.txt","root/elsõ");
+		createFile("dani");
+		createDirectory("ide");
+		replace("root/dani", "root/ide");
 		
 	}
 	
@@ -524,13 +546,14 @@ public class MainFrame extends JFrame {
 		}	
 		
 		int handle = dll.fileOpen(név);
+		System.out.println(név+" handle-je: "+handle+"!");
 		fájl.setHandle(handle);
 		dll.fileClose(handle);
 	}
 	
 	public void createDirectory(String név){
 		Könyvtár könyvtár = new Könyvtár(név,0);
-		if(dll.createDirectory(könyvtár.getNév())){
+		if(dll.createDirectory(név)){
 			if(selectedNode == null) addTreeNode(new DefaultMutableTreeNode(könyvtár));
 			else if(selectedNode.getUserObject() instanceof Könyvtár) addTreeNode(new DefaultMutableTreeNode(könyvtár), selectedNode);
 		}		
@@ -595,5 +618,65 @@ public class MainFrame extends JFrame {
 			removeTreeNode(selectedNode);
 			selectedNode = null; //Törlés után állítsuk null-ra a kiválasztott TreeNode-ot, különben BUG-ot kapunk!
 		}
+	}
+	
+	/**Átmásolja az elsõ paraméterben útvonalként megadott entitást ({@link Entitás}) a második paraméterben megadott helyre, ami szintén
+	 * egy útvonal.
+	 * @param honnan String
+	 * @param hova String
+	 */
+	public void copy(String honnan, String hova){
+		DefaultMutableTreeNode mit = útvonalFejt(honnan);
+		DefaultMutableTreeNode mibe = útvonalFejt(hova);
+			
+		System.out.println(((Entitás)mit.getUserObject()).getNév());
+		System.out.println(((Entitás)mibe.getUserObject()).getNév());
+		
+		DefaultMutableTreeNode uj = (DefaultMutableTreeNode) mit.clone();
+			
+		addTreeNode(uj, mibe);
+	}
+	
+	public void replace(String honnan, String hova){
+		DefaultMutableTreeNode mit = útvonalFejt(honnan);
+		DefaultMutableTreeNode mibe = útvonalFejt(hova);
+			
+		System.out.println(((Entitás)mit.getUserObject()).getNév());
+		System.out.println(((Entitás)mibe.getUserObject()).getNév());
+			
+		addTreeNode(mit, mibe);
+		DefaultMutableTreeNode wd = getWorkingDirectory();
+		System.out.println("Debug: "+((Entitás)wd.getUserObject()).getNév()+", "+((Entitás)mit.getUserObject()).getHandle());
+		//dll.changeDirectory(".");
+		//dll.changeDirectory("elsõ");
+		int handle = dll.fileOpen(((Entitás)selectedNode.getUserObject()).getNév());
+		if(!debug && handle != 0) dll.fileMove(handle);
+		dll.fileClose(handle);
+
+	}
+	
+	/**Visszatér az adoutt útvonal végén lévõ fájl/könyvtárral. Az aktuális mappát a megfelelõ helyre mozgatja, azaz ahol az útvonalnak vége van
+	 * @param útvonal
+	 * @return
+	 */
+	private DefaultMutableTreeNode útvonalFejt(String útvonal){
+		StringTokenizer st = new StringTokenizer(útvonal,"/");
+		
+		String[] darabok = útvonal.split("/");
+		String cim = new String();
+		
+		for(int i=0; i<darabok.length-1; i++){
+			cim+=darabok[i]+"/";
+		}
+		String utolso = darabok[darabok.length-1];
+		changeDirectory(cim);
+		
+		DefaultMutableTreeNode node = tartalmaz(utolso);
+		if(node != null){//Ha létezik az utolsó elem
+			if(node.getUserObject() instanceof Könyvtár) changeDirectory(utolso);
+			return node;
+		}
+		
+		return null;
 	}
 }
