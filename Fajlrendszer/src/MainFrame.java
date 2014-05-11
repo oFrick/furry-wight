@@ -6,6 +6,7 @@ import java.awt.GridBagLayout;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -94,9 +95,11 @@ public class MainFrame extends JFrame {
 		
 		this.setSize(800, 600); //Ablak mérete
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Ablakbezárás esemény kezelése
-		
-		dll = new DLLFunctions(DLLFunctions.class.getProtectionDomain().getCodeSource().getLocation().getPath()+"filesystem.dll");
-		dll.formatDisk(1024);
+		String path = DLLFunctions.class.getProtectionDomain().getCodeSource().getLocation().getPath()+"filesystem.dll";
+		File tmp = new File("filesystem.dll");
+		System.out.println(tmp.getAbsolutePath());
+		dll = new DLLFunctions(tmp.getAbsolutePath());
+		dll.formatDisk(64);
 		
 		loadMenus();
 		loadContent();
@@ -112,29 +115,6 @@ public class MainFrame extends JFrame {
 				
 			}
 		});
-		
-		/*
-		dll.createFile("valami");
-		dll.createDirectory("Ide");
-		
-		int handle = dll.fileOpen("valami");
-		if(handle != 0){
-			dll.changeDirectory("Ide");
-			dll.fileCopy(1);
-			System.out.println("Sikerült! "+handle);
-		}else{
-			System.out.println("Nem sikerült!");
-		}
-		*/
-		
-		//createDirectory("elso");
-		//createFile("fileom");
-		//createDirectory("dani");
-		//changeDirectory("elsõ");
-		//createFile("valami.txt");
-		//changeDirectory("root/elsõ");
-		//útvonalFejt("root/elsõ/valami.txt");
-		//replace("root/fileom.txt","root/elsõ");
 		
 		//copy("root/fileom.txt","root/elsõ");
 		createFile("dani");
@@ -551,7 +531,7 @@ public class MainFrame extends JFrame {
 		if(dll.createFile(fájl.getNév())){
 			if(selectedNode == null) addTreeNode(new DefaultMutableTreeNode(fájl));
 			else if(selectedNode.getUserObject() instanceof Könyvtár) addTreeNode(new DefaultMutableTreeNode(fájl), selectedNode);
-		}	
+		}else Seged.popup("Hiba a létrehozáskor!", "Sikertelen fájl létrehozás", this);	
 		
 		int handle = dll.fileOpen(név);
 		System.out.println(név+" handle-je: "+handle+"!");
@@ -564,7 +544,7 @@ public class MainFrame extends JFrame {
 		if(dll.createDirectory(név)){
 			if(selectedNode == null) addTreeNode(new DefaultMutableTreeNode(könyvtár));
 			else if(selectedNode.getUserObject() instanceof Könyvtár) addTreeNode(new DefaultMutableTreeNode(könyvtár), selectedNode);
-		}		
+		}else Seged.popup("Hiba a létrehozáskor!", "Sikertelen könyvtár létrehozás", this);		
 		
 	}
 	
