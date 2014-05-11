@@ -50,7 +50,7 @@ import fájlrendszer.main.Könyvtár;
  */
 public class MainFrame extends JFrame {
 	
-	public boolean debug = false;
+	public boolean debug = true;
 	
 	//Menü mezõk
 	private JMenuBar menüsor;
@@ -139,7 +139,7 @@ public class MainFrame extends JFrame {
 		//copy("root/fileom.txt","root/elsõ");
 		createFile("dani");
 		createDirectory("ide");
-		replace("root/dani", "root/ide");
+		//copy("root/dani", "root/ide");
 		
 	}
 	
@@ -266,26 +266,34 @@ public class MainFrame extends JFrame {
 					ment.setEnabled(false);
 					
 				}else{
-					selectedNode = selected;
-					byte[] b;
-					if(debug){
-						
-						if(dll.fileOpen(((Entitás)selectedNode.getUserObject()).getNév()) != 0){
-							
-							b = dll.fileGetData(((Entitás)selectedNode.getUserObject()).getHandle());
-							dll.fileClose(((Entitás)selectedNode.getUserObject()).getHandle());
-							
-							tartalom.setEnabled(true);
-							tartalom.setText(new String(b));
-							ment.setEnabled(true);
-						}
-						
-					}
 					
+					if(!tartalmaz(selected)){
+						Seged.popup("Hibás mûvelet: nem lehet így mappát/fájlt kiválasztani!", "Hibás kijelölés", sajat);
+					}else{
+						selectedNode = selected;
+						byte[] b;
+						if(debug){
+							
+							int handle = dll.fileOpen(((Entitás)selectedNode.getUserObject()).getNév());
+							if(handle != 0){
+								//System.out.println("név: "+((Entitás)selectedNode.getUserObject()).getNév()+", handle: "+handle);
+								b = dll.fileGetData(handle);
+								dll.fileClose(handle);
+								
+								tartalom.setEnabled(true);
+								tartalom.setText(new String(b));
+								ment.setEnabled(true);
+							}
+						}
+					}
 				}
 				
-				//selectedNode = selected;
-				//changeDirectory(((Entitás)selectedNode.getUserObject()).getNév());
+				String[] l = dll.list();
+				System.out.print("A mappa tartalma: ");
+				for(String str : l){
+					System.out.print(str+", ");
+				}
+				System.out.println();
 				
 				
 				updateAttributes();
@@ -360,9 +368,9 @@ public class MainFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if(selectedNode.getUserObject() instanceof Fájl){
-					dll.fileOpen(((Entitás)selectedNode.getUserObject()).getNév());
-					dll.fileSetData(((Entitás)selectedNode.getUserObject()).getHandle(), tartalom.getText().getBytes());
-					dll.fileClose(((Entitás)selectedNode.getUserObject()).getHandle());
+					int handle = dll.fileOpen(((Entitás)selectedNode.getUserObject()).getNév());
+					dll.fileSetData(handle, tartalom.getText().getBytes());
+					dll.fileClose(handle);
 				}
 			}
 		});
@@ -626,6 +634,7 @@ public class MainFrame extends JFrame {
 	 * @param hova String
 	 */
 	public void copy(String honnan, String hova){
+		/*
 		DefaultMutableTreeNode mit = útvonalFejt(honnan);
 		DefaultMutableTreeNode mibe = útvonalFejt(hova);
 			
@@ -635,11 +644,40 @@ public class MainFrame extends JFrame {
 		DefaultMutableTreeNode uj = (DefaultMutableTreeNode) mit.clone();
 			
 		addTreeNode(uj, mibe);
+		*/
+		
+		DefaultMutableTreeNode mit = útvonalFejt(honnan);
+		int handle = dll.fileOpen("dani");
+		
+		if(mit.getUserObject() instanceof Könyvtár){
+			Seged.popup("Csak fájlt lehet alacsony szinten másolni!", "Sikertelen másolás!", sajat);
+			return;
+		}
+		
+		DefaultMutableTreeNode mibe = útvonalFejt(hova);
+			
+		System.out.println(((Entitás)mit.getUserObject()).getNév());
+		System.out.println(((Entitás)mibe.getUserObject()).getNév());
+		
+		if(handle != 0){
+			dll.fileCopy(handle);
+			dll.fileClose(handle);
+			
+			DefaultMutableTreeNode uj = (DefaultMutableTreeNode) mit.clone();
+			addTreeNode(uj, mibe);
+
+		}else Seged.popup("Másolásnál rossz handle megadás!","Sikertelen másolás!",sajat);
 	}
 	
 	public void replace(String honnan, String hova){
+		
 		DefaultMutableTreeNode mit = útvonalFejt(honnan);
 		int handle = dll.fileOpen("dani");
+		
+		if(mit.getUserObject() instanceof Könyvtár){
+			Seged.popup("Csak fájlt lehet alacsony szinten áthelyezni!", "Sikertelen áthelyezés!", sajat);
+			return;
+		}
 		
 		DefaultMutableTreeNode mibe = útvonalFejt(hova);
 			
