@@ -16,6 +16,7 @@ import java.util.StringTokenizer;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -76,6 +77,10 @@ public class MainFrame extends JFrame {
 	private JLabel engedélyek; //rwx|rwx|rwx alakban
 	private JTextArea tartalom;
 	private JButton ment;
+	private JCheckBox írható;
+	private JCheckBox futtatható;
+	private JCheckBox titkosított;
+	private JCheckBox rejtett;
 	
 	//Fájlrendszer mezõk
 	private DefaultMutableTreeNode selectedNode; //A fában éppen kiválasztott node
@@ -243,7 +248,7 @@ public class MainFrame extends JFrame {
 					}
 					tartalom.setText("");
 					tartalom.setEnabled(false);
-					ment.setEnabled(false);
+					ment.setEnabled(true);
 					
 				}else{
 					
@@ -267,6 +272,16 @@ public class MainFrame extends JFrame {
 						}
 					}
 				}
+				
+				//Jogosultságok megjelenítése
+				if(((Entitás)selected.getUserObject()).isFuttatható()) futtatható.setSelected(true);
+				else futtatható.setSelected(false);
+				if(((Entitás)selected.getUserObject()).isÍrható()) írható.setSelected(true);
+				else írható.setSelected(false);
+				if(((Entitás)selected.getUserObject()).isTitkosított()) titkosított.setSelected(true);
+				else titkosított.setSelected(false);
+				if(((Entitás)selected.getUserObject()).isRejtett()) rejtett.setSelected(true);
+				else rejtett.setSelected(false);
 				
 				String[] l = dll.list();
 				System.out.print("A mappa tartalma: ");
@@ -341,15 +356,47 @@ public class MainFrame extends JFrame {
 		constraint.gridwidth = 1;
 		panel.add(ment, constraint);
 		
+		futtatható = new JCheckBox();
+		constraint.gridy = 6;
+		constraint.gridx = 1;
+		panel.add(futtatható, constraint);
+		
+		írható = new JCheckBox();
+		constraint.gridx = 2;
+		panel.add(írható, constraint);
+		
+		titkosított = new JCheckBox();
+		constraint.gridx = 3;
+		panel.add(titkosított, constraint);
+		
+		rejtett = new JCheckBox();
+		constraint.gridx = 4;
+		panel.add(rejtett, constraint);
+		
+		JLabel jogok = new JLabel("Jogosultságok(X-W-E-H)");	
+		constraint.gridx = 5;
+		panel.add(jogok, constraint);
 		//Gomb eseménykezelõk
 		
 		ment.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				
+				Entitás ent = ((Entitás)selectedNode.getUserObject());
+				ent.setFuttatható(futtatható.isSelected());
+				ent.setÍrható(írható.isSelected());
+				ent.setTitkosított(titkosított.isSelected());
+				ent.setRejtett(rejtett.isSelected());
+				
+				
 				if(selectedNode.getUserObject() instanceof Fájl){
-					int handle = dll.fileOpen(((Entitás)selectedNode.getUserObject()).getNév());
+					int handle = dll.fileOpen(ent.getNév());
 					dll.fileSetData(handle, tartalom.getText().getBytes());
+					dll.fileSetReadPermission(handle, ent.isFuttatható());
+					dll.fileSetWritePermission(handle, ent.isÍrható());
+					dll.fileSetEncryption(handle, ent.isTitkosított());
+					dll.fileSetEncryption(handle, ent.isRejtett());
 					dll.fileClose(handle);
 				}
 			}
