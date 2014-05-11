@@ -639,20 +639,19 @@ public class MainFrame extends JFrame {
 	
 	public void replace(String honnan, String hova){
 		DefaultMutableTreeNode mit = útvonalFejt(honnan);
+		int handle = dll.fileOpen("dani");
+		
 		DefaultMutableTreeNode mibe = útvonalFejt(hova);
 			
 		System.out.println(((Entitás)mit.getUserObject()).getNév());
 		System.out.println(((Entitás)mibe.getUserObject()).getNév());
-			
-		addTreeNode(mit, mibe);
-		DefaultMutableTreeNode wd = getWorkingDirectory();
-		System.out.println("Debug: "+((Entitás)wd.getUserObject()).getNév()+", "+((Entitás)mit.getUserObject()).getHandle());
-		//dll.changeDirectory(".");
-		//dll.changeDirectory("elsõ");
-		int handle = dll.fileOpen(((Entitás)selectedNode.getUserObject()).getNév());
-		if(!debug && handle != 0) dll.fileMove(handle);
-		dll.fileClose(handle);
+		
+		if(handle != 0){
+			dll.fileMove(handle);
+			dll.fileClose(handle);
+			addTreeNode(mit, mibe);
 
+		}else Seged.popup("Átnevezésnél rossz handle megadás!","Sikertelen átnevezés!",sajat);
 	}
 	
 	/**Visszatér az adoutt útvonal végén lévõ fájl/könyvtárral. Az aktuális mappát a megfelelõ helyre mozgatja, azaz ahol az útvonalnak vége van
