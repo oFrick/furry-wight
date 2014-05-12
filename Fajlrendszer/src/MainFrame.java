@@ -14,6 +14,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import javafx.stage.Popup;
+
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -126,6 +128,8 @@ public class MainFrame extends JFrame {
 		
 		createFile("dani");
 		createDirectory("ide");
+		delete("ide");
+		rename("dani", "hajó");
 		
 	}
 	
@@ -609,8 +613,10 @@ public class MainFrame extends JFrame {
 		for(int i=0; i<wDir.getChildCount(); i++){
 			Entitás ent = (Entitás) ((DefaultMutableTreeNode) wDir.getChildAt(i)).getUserObject();
 			if(ent.getNév() == mit){
-				ent.setNév(mire);
-				siker = true;
+				if(dll.renameFile(mit, mire)){
+					ent.setNév(mire);
+					siker = true;
+				}
 				break;
 			}
 		}
@@ -648,12 +654,27 @@ public class MainFrame extends JFrame {
 		
 	}
 	
-	public void delete(){
+	private void delete(){
 		if(selectedNode != null) {
 			Entitás ent = (Entitás)selectedNode.getUserObject();
 			dll.deleteFile(ent.getNév());
 			removeTreeNode(selectedNode);
 			selectedNode = null; //Törlés után állítsuk null-ra a kiválasztott TreeNode-ot, különben BUG-ot kapunk!
+		}
+	}
+	
+	/**Törli az aktuális könyvtárban lévõ fájlt/mappát
+	 * @author Kiss Dániel
+	 * @param mit
+	 */
+	public void delete(String mit){
+		if(selectedNode != null) {
+			DefaultMutableTreeNode node = tartalmaz(mit);
+			if(node != null){
+				dll.deleteFile(((Entitás)node.getUserObject()).getNév());
+				removeTreeNode(node);
+				node = null; //Törlés után állítsuk null-ra a kiválasztott TreeNode-ot, különben BUG-ot kapunk!
+			}else Seged.popup("Nincs milyen fájl/mappa!", "Sikertelen törlés", this);
 		}
 	}
 	

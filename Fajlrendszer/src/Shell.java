@@ -88,6 +88,7 @@ public void cp(String par1, String par2) {
 		Seged.popup("Hiba! Hianyzo parameter(ek)!", "Hiba!", frame);
 		return;
 	}
+	frame.copy(par1, par2);
 	return;
 }
 
@@ -96,6 +97,7 @@ public void mv(String par1, String par2) {
 		Seged.popup("Hiba! Hianyzo parameter(ek)!", "Hiba!", frame);
 		return;
 	}
+	frame.replace(par1, par2);
 	return;
 }
 public void del(String par1) {
@@ -103,6 +105,7 @@ public void del(String par1) {
 		Seged.popup("Hiba! Hianyzo parameter!", "Hiba!", frame);
 		return;
 	}
+	frame.delete(par1);
 	return;
 }
 public void rn(String par1, String par2) {
@@ -110,6 +113,7 @@ public void rn(String par1, String par2) {
 		Seged.popup("Hiba! Hianyzo parameter(ek)!", "Hiba!", frame);
 		return;
 	}
+	frame.rename(par1, par2);
 	return;
 }
 public void mkdir(String par1) {
@@ -166,13 +170,14 @@ public void help(String par1) {
 	if (par1 == "") {
 		String[] commandlist = { "help", "cp", "copy", "mv", "rename", "hide", "unhide", "move", "del", "delete", "rn", "mkdir", "rmdir", "crypt", "decrypt", "exit", "cd"};
 		Arrays.sort(commandlist);
+		String str = new String();
 		for (i = 0; i < commandlist.length; i++) {
-			//Ezt majd megoldom maskepp
-			//System.out.println(commandlist[i]);
-			return;
+			str+=commandlist[i];
 		}
+		Seged.popup("Lehetséges parancsok: "+str, "Elérhetõ parancsok", frame);
+	}else{
+		helper(par1);
 	}
-	return;
 }
 
 
