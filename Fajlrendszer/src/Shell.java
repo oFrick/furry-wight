@@ -13,8 +13,14 @@ public class Shell {
 	*}
 	*/
 	
-	public static void bemenet(String cmd) {
-		String par1, par2;
+	private MainFrame frame;
+	
+	public Shell(MainFrame frame){
+		this.frame = frame;
+	}
+	
+	public void bemenet(String cmd) {
+		String par1, par2 = null;
 		while (!(cmd == "exit")) { //Amig nem irja be az "exit" parancsot...
 			StringTokenizer st = new StringTokenizer(cmd); //Az inputot tokenekre bontjuk a szokozok menten
 				while (st.hasMoreTokens() && (cmd != "exit")) { //Amig van token es az nem "exit"...
@@ -49,7 +55,7 @@ public class Shell {
 			
 		}
 	}
-public static void helper(String par1) { //A megfelelo szoveg kiiratasa a help parancs eseten
+public void helper(String par1) { //A megfelelo szoveg kiiratasa a help parancs eseten
 	switch(par1) {
 		case "help": Seged.popup("help: Ez a parancs kilistazza az osszes elerheto parancsot. Ha egy parametert is megadunk, akkor arrol a parancsrol kapunk informaciokat.", "Help üzenet", frame); break;
 		case "cp": Seged.popup("cp: Ez a parancs az elso parameterben megadott fajlrol keszit egy masolatot, amit a masodik parameterben megadott helyre ment el.", "Help üzenet", frame); break;
@@ -77,7 +83,7 @@ public static void helper(String par1) { //A megfelelo szoveg kiiratasa a help p
 /**
 *Ezekben a metodusokban fog tortenni a megfelelo fuggveny meghivasa, a parameterek atadasa, szintaktikai hibaellenorzes
 */
-public static void cp(String par1, String par2) {
+public void cp(String par1, String par2) {
 	if ((par1 == "") || (par2 == "")) {
 		Seged.popup("Hiba! Hianyzo parameter(ek)!", "Hiba!", frame);
 		return;
@@ -85,77 +91,77 @@ public static void cp(String par1, String par2) {
 	return;
 }
 
-public static void mv(String par1, String par2) {
+public void mv(String par1, String par2) {
 	if ((par1 == "") || (par2 == "")) {
 		Seged.popup("Hiba! Hianyzo parameter(ek)!", "Hiba!", frame);
 		return;
 	}
 	return;
 }
-public static void del(String par1) {
+public void del(String par1) {
 	if (par1 == "") {
 		Seged.popup("Hiba! Hianyzo parameter!", "Hiba!", frame);
 		return;
 	}
 	return;
 }
-public static void rn(String par1, String par2) {
+public void rn(String par1, String par2) {
 	if (par1 == "") {
 		Seged.popup("Hiba! Hianyzo parameter(ek)!", "Hiba!", frame);
 		return;
 	}
 	return;
 }
-public static void mkdir(String par1) {
+public void mkdir(String par1) {
 	if (par1 == "") {
 		Seged.popup("Hiba! Hianyzo parameter!", "Hiba!", frame);
 		return;
 	}
 	return;
 }
-public static void rmdir(String par1) {
+public void rmdir(String par1) {
 	if (par1 == "") {
 		Seged.popup("Hiba! Hianyzo parameter!", "Hiba!", frame);
 		return;
 	}
 	return;
 }
-public static void crypt(String par1) {
+public void crypt(String par1) {
 	if (par1 == "") {
 		Seged.popup("Hiba! Hianyzo parameter!", "Hiba!", frame);
 		return;
 	}
 	return;
 }
-public static void decrypt(String par1) {
+public void decrypt(String par1) {
 	if (par1 == "") {
 		Seged.popup("Hiba! Hianyzo parameter!", "Hiba!", frame);
 		return;
 	}
 	return;
 }
-public static void cd(String par1) {
+public void cd(String par1) {
 	if (par1 == "") {
 		Seged.popup("Hiba! Hianyzo parameter!", "Hiba!", frame);
 		return;
 	}
 	return;
 }
-public static void hide(String par1) {
+public void hide(String par1) {
 	if (par1 == "") {
 		Seged.popup("Hiba! Hianyzo parameter!", "Hiba!", frame);
 		return;
 	}
 	return;
 }
-public static void unhide(String par1) {
+public void unhide(String par1) {
 	if (par1 == "") {
 		Seged.popup("Hiba! Hianyzo parameter!", "Hiba!", frame);
 		return;
 	}
 	return;
 }
-public static void help(String par1) {
+public void help(String par1) {
 	int i;
 	if (par1 == "") {
 		String[] commandlist = { "help", "cp", "copy", "mv", "rename", "hide", "unhide", "move", "del", "delete", "rn", "mkdir", "rmdir", "crypt", "decrypt", "exit", "cd"};

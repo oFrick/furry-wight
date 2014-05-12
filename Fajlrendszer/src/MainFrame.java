@@ -74,13 +74,16 @@ public class MainFrame extends JFrame {
 	private JButton áthelyezésGomb;
 	private GridBagConstraints constraint; //Elhelyezési "kényszer"
 	private JLabel készítésIdeje;
-	private JLabel engedélyek; //rwx|rwx|rwx alakban
 	private JTextArea tartalom;
 	private JButton ment;
 	private JCheckBox írható;
 	private JCheckBox futtatható;
 	private JCheckBox titkosított;
 	private JCheckBox rejtett;
+	
+	private JMenu egyébMenü;
+	private JMenuItem parancsMenüElem;
+	private JMenu titkosítás;
 	
 	//Fájlrendszer mezõk
 	private DefaultMutableTreeNode selectedNode; //A fában éppen kiválasztott node
@@ -121,10 +124,8 @@ public class MainFrame extends JFrame {
 			}
 		});
 		
-		//copy("root/fileom.txt","root/elsõ");
 		createFile("dani");
 		createDirectory("ide");
-		//copy("root/dani", "root/ide");
 		
 	}
 	
@@ -332,32 +333,25 @@ public class MainFrame extends JFrame {
 		constraint.gridy = 1;
 		panel.add(áthelyezésGomb, constraint);
 		
-		engedélyek = new JLabel("Engedélyek: ");
-		//constraint.gridwidth = 5;
-		constraint.weighty=0;
-		constraint.gridx = 0;
-		constraint.gridy = 2;
-		panel.add(engedélyek, constraint);
-		
 		készítésIdeje = new JLabel("Létrehozva: ");
 		constraint.weighty=0;
 		constraint.gridx = 0;
-		constraint.gridy = 3;
+		constraint.gridy = 2;
 		panel.add(készítésIdeje, constraint);
 		
 		tartalom = new JTextArea(10, 1);
-		constraint.gridy = 4;
+		constraint.gridy = 3;
 		constraint.weighty = 1;
 		constraint.gridwidth = 4;
 		panel.add(tartalom, constraint);
 		
 		ment = new JButton("Mentés");
-		constraint.gridy = 5;
+		constraint.gridy = 4;
 		constraint.gridwidth = 1;
 		panel.add(ment, constraint);
 		
 		futtatható = new JCheckBox();
-		constraint.gridy = 6;
+		constraint.gridy = 5;
 		constraint.gridx = 1;
 		panel.add(futtatható, constraint);
 		
@@ -452,19 +446,11 @@ public class MainFrame extends JFrame {
 	 */
 	private void updateAttributes(){
 		Entitás ent = (Entitás)selectedNode.getUserObject();
-		String jog = new String("Jogosultságok: ");
 		DateFormat dátumFormátum = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		Calendar c = Calendar.getInstance();
 		if(ent != null){
-			if(ent.isFuttatható()) jog+="r";
-			else jog+="-";
-			if(ent.isÍrható()) jog+="w";
-			else jog+="-";
-			engedélyek.setText(jog);
 			készítésIdeje.setText("Létrehozva: "+dátumFormátum.format(ent.getLétrehozva().getTime()));
 		}
 		else{
-			engedélyek.setText("Jogosultságok: ");
 			készítésIdeje.setText("Létrehozva: ");
 		}
 		
@@ -490,6 +476,22 @@ public class MainFrame extends JFrame {
 		fájlrendszerMenü.add(betöltFájlrendszer);
 		fájlrendszerMenü.add(mentFájlrendszer);
 		fájlrendszerMenü.add(kilépés);
+		
+		egyébMenü = new JMenu("Egyéb");
+		menüsor.add(egyébMenü);
+		parancsMenüElem = new JMenuItem("Parancsértelmezõ");
+		egyébMenü.add(parancsMenüElem);
+		
+		parancsMenüElem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String parancs = újElemPopup("parancs");
+				Shell shell = new Shell(sajat);
+				shell.bemenet(parancs);
+								
+			}
+		});
 	}
 	
 	private void setupCellRenderer(){
