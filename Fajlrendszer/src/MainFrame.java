@@ -131,6 +131,7 @@ public class MainFrame extends JFrame {
 		createDirectory("gomba");
 		//replace("gomba", "ide");
 		//sreplace("dani", "ide");
+		//delete("dani");
 		
 	}
 	
@@ -377,6 +378,16 @@ public class MainFrame extends JFrame {
 		panel.add(jogok, constraint);
 		//Gomb eseménykezelõk
 		
+		másolásGomb.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String innen = Seged.inputPopup("Adja meg a forrást a másoláshoz!", "forrás", "Másolás innen", sajat);
+				String ezt = Seged.inputPopup("Adja meg a célt az másoláshoz!", "cél", "Másolás ide", sajat);
+				copy(innen, ezt);
+			}
+		});
+		
 		áthelyezésGomb.addActionListener(new ActionListener() {
 			
 			@Override
@@ -441,14 +452,19 @@ public class MainFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Fájl törlés esemény implementálása a Fájl objektummal
+				/*
 				if(selectedNode != null) {
 					Entitás ent = (Entitás)selectedNode.getUserObject();
-					//dll.deleteFile(ent.getNév());
+					dll.deleteFile(ent.getNév());
 					DefaultMutableTreeNode törlendõ = selectedNode;
 					changeDirectory(".."); //Törlés után vissza a szülõbe!
 					removeTreeNode(törlendõ);
 					
-				}
+				}else Seged.popup("Nincs mit törölni!", "Törlés sikertelen!", sajat);
+				*/
+				
+				Entitás ent = (Entitás)selectedNode.getUserObject();
+				delete(ent.getNév());
 			}
 		});
 		
@@ -678,11 +694,13 @@ public class MainFrame extends JFrame {
 	public void delete(String mit){
 		if(selectedNode != null) {
 			DefaultMutableTreeNode node = tartalmaz(mit);
+			if(node == null) node = getWorkingDirectory();
 			if(node != null){
 				if(dll.deleteFile(((Entitás)node.getUserObject()).getNév())){
 					removeTreeNode(node);
+					changeDirectory("..");
 					node = null;
-				}else Seged.popup("Nincs milyen fájl/mappa!", "Sikertelen törlés", this);
+				}else Seged.popup("Sikertelen törlés. A fájlrendszerben ilyen fájl/mappa nem található!", "Sikertelen törlés", this);
 				
 			}else Seged.popup("Nincs milyen fájl/mappa!", "Sikertelen törlés", this);
 		}
@@ -714,7 +732,15 @@ public class MainFrame extends JFrame {
 			return;
 		}
 		
-		DefaultMutableTreeNode mibe = útvonalFejt(hova);
+		DefaultMutableTreeNode mibe;
+		
+		if(hova.equals("..") && selectedNode != rootElement){
+			mibe = (DefaultMutableTreeNode)selectedNode.getParent();
+		}else if(hova.equals("root")){
+			mibe = rootElement;
+		}else{
+			mibe = útvonalFejt(hova);
+		}
 			
 		System.out.println(((Entitás)mit.getUserObject()).getNév());
 		System.out.println(((Entitás)mibe.getUserObject()).getNév());
