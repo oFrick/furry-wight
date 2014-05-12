@@ -128,8 +128,9 @@ public class MainFrame extends JFrame {
 		
 		createFile("dani");
 		createDirectory("ide");
-		delete("ide");
-		rename("dani", "hajó");
+		createDirectory("gomba");
+		//replace("gomba", "ide");
+		//sreplace("dani", "ide");
 		
 	}
 	
@@ -375,6 +376,17 @@ public class MainFrame extends JFrame {
 		constraint.gridx = 5;
 		panel.add(jogok, constraint);
 		//Gomb eseménykezelõk
+		
+		áthelyezésGomb.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String innen = Seged.inputPopup("Adja meg a forrást az áthelyezéshez!", "forrás", "Áthelyezés innen", sajat);
+				String ezt = Seged.inputPopup("Adja meg a célt az áthelyezéshez!", "cél", "Áthelyezés ide", sajat);
+				replace(innen, ezt);
+				
+			}
+		});
 		
 		ment.addActionListener(new ActionListener() {
 			
@@ -655,12 +667,8 @@ public class MainFrame extends JFrame {
 	}
 	
 	private void delete(){
-		if(selectedNode != null) {
-			Entitás ent = (Entitás)selectedNode.getUserObject();
-			dll.deleteFile(ent.getNév());
-			removeTreeNode(selectedNode);
-			selectedNode = null; //Törlés után állítsuk null-ra a kiválasztott TreeNode-ot, különben BUG-ot kapunk!
-		}
+		Entitás ent = (Entitás)selectedNode.getUserObject();
+		delete(ent.getNév());
 	}
 	
 	/**Törli az aktuális könyvtárban lévõ fájlt/mappát
@@ -671,9 +679,11 @@ public class MainFrame extends JFrame {
 		if(selectedNode != null) {
 			DefaultMutableTreeNode node = tartalmaz(mit);
 			if(node != null){
-				dll.deleteFile(((Entitás)node.getUserObject()).getNév());
-				removeTreeNode(node);
-				node = null; //Törlés után állítsuk null-ra a kiválasztott TreeNode-ot, különben BUG-ot kapunk!
+				if(dll.deleteFile(((Entitás)node.getUserObject()).getNév())){
+					removeTreeNode(node);
+					node = null;
+				}else Seged.popup("Nincs milyen fájl/mappa!", "Sikertelen törlés", this);
+				
 			}else Seged.popup("Nincs milyen fájl/mappa!", "Sikertelen törlés", this);
 		}
 	}
@@ -721,25 +731,33 @@ public class MainFrame extends JFrame {
 	
 	public void replace(String honnan, String hova){
 		
-		DefaultMutableTreeNode mit = útvonalFejt(honnan);
-		int handle = dll.fileOpen("dani");
-		
-		if(mit.getUserObject() instanceof Könyvtár){
-			Seged.popup("Csak fájlt lehet alacsony szinten áthelyezni!", "Sikertelen áthelyezés!", sajat);
-			return;
+		int handle = dll.fileOpen(honnan);
+		if(handle != 0){
+			DefaultMutableTreeNode wDir = getWorkingDirectory();
+			DefaultMutableTreeNode mit = útvonalFejt(honnan);
+			DefaultMutableTreeNode mibe;
+			
+			if(wDir != getWorkingDirectory()) changeDirectory(".."); //Mert az elõzõ útvonalfejtés bedobott a "honnan" mappába
+			
+			if(hova.equals("..") && selectedNode != rootElement){
+				mibe = (DefaultMutableTreeNode)selectedNode.getParent();
+			}else if(hova.equals("root")){
+				mibe = rootElement;
+			}else{
+				mibe = útvonalFejt(hova);
+			}
+			
+			
+				
+			
+			if(handle != 0 && mit != null && mibe != null){
+				dll.fileMove(handle);
+				dll.fileClose(handle);
+				addTreeNode(mit, mibe);
+
+			}else Seged.popup("Nem találom a handle-t vagy helytelen forrás/cél megadás!","Sikertelen áthelyezés!",sajat);
 		}
 		
-		DefaultMutableTreeNode mibe = útvonalFejt(hova);
-			
-		System.out.println(((Entitás)mit.getUserObject()).getNév());
-		System.out.println(((Entitás)mibe.getUserObject()).getNév());
-		
-		if(handle != 0){
-			dll.fileMove(handle);
-			dll.fileClose(handle);
-			addTreeNode(mit, mibe);
-
-		}else Seged.popup("Átnevezésnél rossz handle megadás!","Sikertelen átnevezés!",sajat);
 	}
 	
 	/**Visszatér az adoutt útvonal végén lévõ fájl/könyvtárral. Az aktuális mappát a megfelelõ helyre mozgatja, azaz ahol az útvonalnak vége van
