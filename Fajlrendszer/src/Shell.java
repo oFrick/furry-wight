@@ -20,7 +20,7 @@ public class Shell {
 	}
 	
 	public void bemenet(String cmd) {
-		String par1, par2 = null;
+		String par1 = "", par2 = "";
 		StringTokenizer st = new StringTokenizer(cmd); //Az inputot tokenekre bontjuk a szokozok menten
 		while (st.hasMoreTokens()) { //Amig van token...
 			switch (st.nextToken()) { //Az elso tokennek megfelelo parancs fuggvenyet hivjuk meg a megadott parameterekkel
