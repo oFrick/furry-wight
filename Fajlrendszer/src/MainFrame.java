@@ -72,8 +72,6 @@ public class MainFrame extends JFrame {
 	private JMenuBar menüsor;
 	private JMenu fájlrendszerMenü;
 	private JMenuItem újFáljrendszer;
-	private JMenuItem betöltFájlrendszer;
-	private JMenuItem mentFájlrendszer;
 	private JMenuItem kilépés;
 	
 	//Panel mezõk
@@ -146,13 +144,6 @@ public class MainFrame extends JFrame {
 				
 			}
 		});
-		
-		createFile("dani");
-		createDirectory("ide");
-		createDirectory("gomba");
-		//replace("gomba", "ide");
-		//sreplace("dani", "ide");
-		//delete("dani");
 		
 	}
 	
@@ -494,16 +485,12 @@ public class MainFrame extends JFrame {
 		menüsor = new JMenuBar();
 		fájlrendszerMenü = new JMenu("Fájlrendszer");
 		újFáljrendszer = new JMenuItem("Új");
-		betöltFájlrendszer = new JMenuItem("Betölt");
-		mentFájlrendszer = new JMenuItem("Mentés");
 		kilépés = new JMenuItem("Kilépés");
 		
 		//Objektumok "elhejezése"
 		this.setJMenuBar(menüsor);
 		menüsor.add(fájlrendszerMenü);
 		fájlrendszerMenü.add(újFáljrendszer);
-		fájlrendszerMenü.add(betöltFájlrendszer);
-		fájlrendszerMenü.add(mentFájlrendszer);
 		fájlrendszerMenü.add(kilépés);
 		
 		egyébMenü = new JMenu("Egyéb");
