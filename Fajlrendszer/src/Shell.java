@@ -21,38 +21,27 @@ public class Shell {
 	
 	public void bemenet(String cmd) {
 		String par1, par2 = null;
-		while (!(cmd == "exit")) { //Amig nem irja be az "exit" parancsot...
-			StringTokenizer st = new StringTokenizer(cmd); //Az inputot tokenekre bontjuk a szokozok menten
-				while (st.hasMoreTokens() && (cmd != "exit")) { //Amig van token es az nem "exit"...
-					switch (st.nextToken()) { //Az elso tokennek megfelelo parancs fuggvenyet hivjuk meg a megadott parameterekkel
-						case "help": par1 = st.nextToken(); help(par1); break;
-						case "cp": par1 = st.nextToken(); par2 = st.nextToken(); cp(par1, par2); break;
-						case "copy": par1 = st.nextToken(); par2 = st.nextToken(); cp(par1, par2); break;
-						case "mv": par1 = st.nextToken(); par2 = st.nextToken(); mv(par1, par2); break;
-						case "move": par1 = st.nextToken(); par2 = st.nextToken(); mv(par1, par2); break;
-						case "del": par1 = st.nextToken(); del(par1); break;
-						case "delete": par1 = st.nextToken(); del(par1); break;
-						case "rn": par1 = st.nextToken(); rn(par1, par2); break;
-						case "rename": par1 = st.nextToken(); rn(par1, par2); break;
-						case "mkdir": par1 = st.nextToken(); mkdir(par1); break;
-						case "rmdir": par1 = st.nextToken(); rmdir(par1); break;
-						case "crypt": par1 = st.nextToken(); crypt(par1); break;
-						case "decrypt": par1 = st.nextToken(); decrypt(par1); break;
-						case "cd": par1 = st.nextToken(); cd(par1); break;
-						case "hide": par1 = st.nextToken(); hide(par1); break;
-						case "unhide": par1 = st.nextToken(); unhide(par1); break;
-						case "exit": return;
-						default: Seged.popup("Nem talalhato ilyen parancs!", "Hiba!", frame); break;
-					}
-				/* Debug
-				*System.out.println(par1 + " " + par2);
-				*par1 = "";
-				*par2 = "";
-				*/
-				}
-				
-
-			
+		StringTokenizer st = new StringTokenizer(cmd); //Az inputot tokenekre bontjuk a szokozok menten
+		while (st.hasMoreTokens()) { //Amig van token...
+			switch (st.nextToken()) { //Az elso tokennek megfelelo parancs fuggvenyet hivjuk meg a megadott parameterekkel
+				case "help": par1 = st.nextToken(); help(par1); break;
+				case "cp": par1 = st.nextToken(); par2 = st.nextToken(); cp(par1, par2); break;
+				case "copy": par1 = st.nextToken(); par2 = st.nextToken(); cp(par1, par2); break;
+				case "mv": par1 = st.nextToken(); par2 = st.nextToken(); mv(par1, par2); break;
+				case "move": par1 = st.nextToken(); par2 = st.nextToken(); mv(par1, par2); break;
+				case "del": par1 = st.nextToken(); del(par1); break;
+				case "delete": par1 = st.nextToken(); del(par1); break;
+				case "rn": par1 = st.nextToken(); rn(par1, par2); break;
+				case "rename": par1 = st.nextToken(); rn(par1, par2); break;
+				case "mkdir": par1 = st.nextToken(); mkdir(par1); break;
+				case "rmdir": par1 = st.nextToken(); rmdir(par1); break;
+				case "crypt": par1 = st.nextToken(); crypt(par1); break;
+				case "decrypt": par1 = st.nextToken(); decrypt(par1); break;
+				case "cd": par1 = st.nextToken(); cd(par1); break;
+				case "hide": par1 = st.nextToken(); hide(par1); break;
+				case "unhide": par1 = st.nextToken(); unhide(par1); break;
+				default: Seged.popup("Nem talalhato ilyen parancs!", "Hiba!", frame); break;
+			}
 		}
 	}
 public void helper(String par1) { //A megfelelo szoveg kiiratasa a help parancs eseten
@@ -168,7 +157,7 @@ public void unhide(String par1) {
 public void help(String par1) {
 	int i;
 	if (par1 == "") {
-		String[] commandlist = { "help", "cp", "copy", "mv", "rename", "hide", "unhide", "move", "del", "delete", "rn", "mkdir", "rmdir", "crypt", "decrypt", "exit", "cd"};
+		String[] commandlist = { "help", "cp", "copy", "mv", "rename", "hide", "unhide", "move", "del", "delete", "rn", "mkdir", "rmdir", "crypt", "decrypt", "cd"};
 		Arrays.sort(commandlist);
 		String str = new String();
 		for (i = 0; i < commandlist.length; i++) {
