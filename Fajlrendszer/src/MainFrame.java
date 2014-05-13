@@ -221,6 +221,7 @@ public class MainFrame extends JFrame {
 			@Override
 			public void treeNodesChanged(TreeModelEvent e) {
 				Entitás ent = (Entitás)selectedNode.getUserObject();
+				renameGui(ent.getOldName(), ent.getNév());
 			}
 			
 			
@@ -666,7 +667,7 @@ public class MainFrame extends JFrame {
 		
 		JOptionPane optionpane = new JOptionPane(válaszLehetõség, JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION, null, válaszGomb, válaszGomb[0]);
 		JDialog dialog = optionpane.createDialog(this, "Új "+milyet+" megadás");
-		dialog.setEnabled(true);
+		dialog.show();
 		
 		return szövegmezõ.getText();
 		
@@ -748,9 +749,28 @@ public class MainFrame extends JFrame {
 			
 		for(int i=0; i<wDir.getChildCount(); i++){
 			Entitás ent = (Entitás) ((DefaultMutableTreeNode) wDir.getChildAt(i)).getUserObject();
-			if(ent.getNév() == mit){
+			if(ent.getNév().equals(mit) || ent.getOldName().equals(mit)){
 				if(dll.renameFile(mit, mire)){
-					ent.setNév(mire);
+					if(!ent.getNév().equals(mire)) ent.setNév(mire);
+					siker = true;
+				}
+				break;
+			}
+		}
+		
+		if(!siker) Seged.popup("Nincs ilyen könytár/fájl: "+mit+"!", "Átnevezés sikertelen!", this);
+	}
+	
+	public void renameGui(String mit, String mire){
+		changeDirectory("..");
+		DefaultMutableTreeNode wDir = getWorkingDirectory(); //Aktuális munkakönyvtár
+		boolean siker = false;
+			
+		for(int i=0; i<wDir.getChildCount(); i++){
+			Entitás ent = (Entitás) ((DefaultMutableTreeNode) wDir.getChildAt(i)).getUserObject();
+			if(ent.getNév().equals(mit) || ent.getOldName().equals(mit)){
+				if(dll.renameFile(mit, mire)){
+					if(!ent.getNév().equals(mire)) ent.setNév(mire);
 					siker = true;
 				}
 				break;

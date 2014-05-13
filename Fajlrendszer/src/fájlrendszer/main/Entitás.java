@@ -40,7 +40,12 @@ public abstract class Entitás {
 	 * @param név the név to set
 	 */
 	public void setNév(String név) {
+		this.oldName = this.név;
 		this.név = név;
+	}
+
+	public String getOldName() {
+		return oldName;
 	}
 
 	public Entitás(String név, int handle){
