@@ -188,6 +188,7 @@ public class MainFrame extends JFrame {
 		panel = new JPanel(layout);
 		setContentPane(panel);
 		
+		//TODO eltávolítani a felesleges részt
 		rootElement = new DefaultMutableTreeNode(new Könyvtár("root",0));
 		selectedNode = rootElement; //Alapértelmezés
 		
@@ -220,7 +221,6 @@ public class MainFrame extends JFrame {
 			@Override
 			public void treeNodesChanged(TreeModelEvent e) {
 				Entitás ent = (Entitás)selectedNode.getUserObject();
-				//TODO Megvalósítani a dll-ben!!!!! dll.rename(ent.getNév());
 			}
 			
 			
@@ -459,6 +459,16 @@ public class MainFrame extends JFrame {
 	}
 	
 	//--------------------------------------------------------------------------------------------------------------------
+	
+	private void újFájlrendszer(){
+	//TODO implementálni
+		rootElement = new DefaultMutableTreeNode(new Könyvtár("root",0));
+		selectedNode = rootElement; //Alapértelmezés
+		
+		treemodel = new SajatTreeModell(rootElement);
+		
+		explorer = new JTree(treemodel);
+	}
 	
 	/**
 	 * A kiválasztott fájl vagy mappa attribútumainak frissítése a grafikus felületen
