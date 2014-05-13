@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -281,7 +282,7 @@ public class MainFrame extends JFrame {
 							tartalom.setEnabled(true);
 							tartalom.setText(adat);
 							ment.setEnabled(true);
-						}
+						}else Seged.popup("HIBA. Fájlból olvasáskor gond van!", "Fájl megnyitás sikertelen", sajat);
 					}
 				}
 				
@@ -951,7 +952,12 @@ public class MainFrame extends JFrame {
 			b = dll.fileGetData(handle);
 			dll.fileClose(handle);
 			
-			return new String(b);
+			try {
+				return new String(b, "UTF8");
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return null;
 	}
@@ -964,13 +970,19 @@ public class MainFrame extends JFrame {
 		if(ent instanceof Fájl){
 			int handle = dll.fileOpen(ent.getNév());
 			if(handle != 0){
-				dll.fileSetData(handle, str.getBytes());
+				try {
+					dll.fileSetData(handle, str.getBytes("UTF8"));
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				dll.fileSetReadPermission(handle, ent.isFuttatható());
 				dll.fileSetWritePermission(handle, ent.isÍrható());
 				dll.fileSetEncryption(handle, ent.isTitkosított());
 				dll.fileSetEncryption(handle, ent.isRejtett());
 				dll.fileClose(handle);
-			}
+				
+			}else Seged.popup("Nem tudok a fájlba írni! Nem találom a handle-t.", "Sikertelen fájlba írás!", sajat);
 			
 		}
 	}

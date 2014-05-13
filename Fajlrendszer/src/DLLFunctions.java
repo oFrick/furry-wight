@@ -27,8 +27,16 @@ public class DLLFunctions {
      * Átváltja az aktív munkakönyvtárat egy új mappára. Ez lehet: "." (root), ".." (közvetlen szülõ mappa) vagy
      * egy közvetlen almappa neve.
      * @param str az új mappa neve, "." vagy ".."
+     * @return true, ha sikeres volt a mûvelet, egyébként false
      */
-    native void changeDirectory(String str);
+    native boolean changeDirectory(String str);
+    
+    /**
+     * IMPLEMENTÁLVA & TESZTELVE
+     * Az aktuális DLL verzió lekérésére szolgál.
+     * @return a rendszer által használt DLL verzióinformációja
+     */
+    native String version();
     
 
     /**
