@@ -221,7 +221,8 @@ public class MainFrame extends JFrame {
 			@Override
 			public void treeNodesChanged(TreeModelEvent e) {
 				Entitás ent = (Entitás)selectedNode.getUserObject();
-				renameGui(ent.getOldName(), ent.getNév());
+				if(ent instanceof Fájl) renameGui(ent.getOldName(), ent.getNév(), true);
+				else renameGui(ent.getOldName(), ent.getNév(), false);
 			}
 			
 			
@@ -453,7 +454,8 @@ public class MainFrame extends JFrame {
 				*/
 				
 				Entitás ent = (Entitás)selectedNode.getUserObject();
-				delete(ent.getNév());
+				if(ent instanceof Fájl) deleteGui(ent.getNév(), true);
+				else deleteGui(ent.getNév(), false);
 			}
 		});
 		
@@ -761,23 +763,9 @@ public class MainFrame extends JFrame {
 		if(!siker) Seged.popup("Nincs ilyen könytár/fájl: "+mit+"!", "Átnevezés sikertelen!", this);
 	}
 	
-	public void renameGui(String mit, String mire){
-		changeDirectory("..");
-		DefaultMutableTreeNode wDir = getWorkingDirectory(); //Aktuális munkakönyvtár
-		boolean siker = false;
-			
-		for(int i=0; i<wDir.getChildCount(); i++){
-			Entitás ent = (Entitás) ((DefaultMutableTreeNode) wDir.getChildAt(i)).getUserObject();
-			if(ent.getNév().equals(mit) || ent.getOldName().equals(mit)){
-				if(dll.renameFile(mit, mire)){
-					if(!ent.getNév().equals(mire)) ent.setNév(mire);
-					siker = true;
-				}
-				break;
-			}
-		}
-		
-		if(!siker) Seged.popup("Nincs ilyen könytár/fájl: "+mit+"!", "Átnevezés sikertelen!", this);
+	public void renameGui(String mit, String mire, boolean isFájl){
+		if(!isFájl) changeDirectory("..");
+		rename(mit, mire);
 	}
 	
 	/**Átváltja az aktuális könyvtárat a megadott útvonalnak megfelelõ könyvtárba.
@@ -827,6 +815,11 @@ public class MainFrame extends JFrame {
 				
 			}else Seged.popup("Nincs milyen fájl/mappa!", "Sikertelen törlés", this);
 		}
+	}
+	
+	public void deleteGui(String mit, boolean isFájl){
+		if(!isFájl)changeDirectory("..");
+		delete(mit);
 	}
 	
 	/**Átmásolja az elsõ paraméterben útvonalként megadott entitást ({@link Entitás}) a második paraméterben megadott helyre, ami szintén
