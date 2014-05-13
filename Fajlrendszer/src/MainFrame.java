@@ -86,6 +86,7 @@ public class MainFrame extends JFrame {
 	private JButton áthelyezésGomb;
 	private GridBagConstraints constraint; //Elhelyezési "kényszer"
 	private JLabel készítésIdeje;
+	private JLabel kijelölt;
 	private JTextArea tartalom;
 	private JButton ment;
 	private JCheckBox írható;
@@ -144,6 +145,9 @@ public class MainFrame extends JFrame {
 				
 			}
 		});
+		
+		createDirectory("Danika");
+		rename("Danika", "Gábor");
 		
 	}
 	
@@ -346,8 +350,13 @@ public class MainFrame extends JFrame {
 		constraint.gridy = 2;
 		panel.add(készítésIdeje, constraint);
 		
+		kijelölt = new JLabel("Kijelölt elem: ");
+		constraint.gridx = 1;
+		panel.add(kijelölt, constraint);
+		
 		tartalom = new JTextArea(10, 1);
 		constraint.gridy = 3;
+		constraint.gridx = 0;
 		constraint.weighty = 1;
 		constraint.gridwidth = 4;
 		panel.add(tartalom, constraint);
@@ -482,9 +491,11 @@ public class MainFrame extends JFrame {
 		DateFormat dátumFormátum = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		if(ent != null){
 			készítésIdeje.setText("Létrehozva: "+dátumFormátum.format(ent.getLétrehozva().getTime()));
+			kijelölt.setText("Kijelölt elem: "+((Entitás)selectedNode.getUserObject()).getNév());
 		}
 		else{
 			készítésIdeje.setText("Létrehozva: ");
+			kijelölt.setText("Kijelölt elem: ");
 		}
 		
 	}
@@ -531,7 +542,7 @@ public class MainFrame extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				String parancs = újElemPopup("parancs");
+				String parancs = Seged.inputPopup("Adja meg a parancsot:", "parancs", "Parancsértelmezõ", sajat);
 				Shell shell = new Shell(sajat);
 				shell.bemenet(parancs);
 								
@@ -778,9 +789,13 @@ public class MainFrame extends JFrame {
 			if(nev.equals("root")){ //Gyökérbe váltás
 				selectedNode = rootElement;
 				dll.changeDirectory(".");
+				updateAttributes();
 			}else if(nev.equals("..")){ //Szülõ mappába váltás
-				selectedNode = (DefaultMutableTreeNode) selectedNode.getParent();
-				dll.changeDirectory("..");
+				if(selectedNode != rootElement){
+					selectedNode = (DefaultMutableTreeNode) selectedNode.getParent();
+					dll.changeDirectory("..");
+					updateAttributes();
+				}else Seged.popup("A root-nál nem lehet feljebb lépni!", "Sikertelen könyvtár váltás", sajat);
 			}else{ //Almappába váltás
 				DefaultMutableTreeNode cel = tartalmaz(nev);
 				if(cel != null){ //Ha van ilyen alkönyvtár
@@ -788,6 +803,7 @@ public class MainFrame extends JFrame {
 						selectedNode = cel;
 						dll.changeDirectory(nev);
 						System.out.println("váltottam: "+nev+"!");
+						updateAttributes();
 					}else Seged.popup("Ez nem könyvtár: "+nev+"!", "Nem könyvtár", this);
 				} else{
 					Seged.popup("Nincs ilyen könyvtár/alkönyvtár: "+nev+" itt: "+((Entitás)selectedNode.getUserObject()).getNév()+"!", "Sikertelen könyvtárváltás!", this);
@@ -809,7 +825,7 @@ public class MainFrame extends JFrame {
 			if(node != null){
 				if(dll.deleteFile(((Entitás)node.getUserObject()).getNév())){
 					removeTreeNode(node);
-					changeDirectory("..");
+					if(getWorkingDirectory() != rootElement) changeDirectory("..");
 					node = null;
 				}else Seged.popup("Sikertelen törlés. A fájlrendszerben ilyen fájl/mappa nem található!", "Sikertelen törlés", this);
 				

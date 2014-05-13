@@ -110,6 +110,7 @@ public void mkdir(String par1) {
 		Seged.popup("Hiba! Hianyzo parameter!", "Hiba!", frame);
 		return;
 	}
+	frame.createDirectory(par1);
 	return;
 }
 public void rmdir(String par1) {
@@ -117,6 +118,7 @@ public void rmdir(String par1) {
 		Seged.popup("Hiba! Hianyzo parameter!", "Hiba!", frame);
 		return;
 	}
+	frame.delete(par1);
 	return;
 }
 public void crypt(String par1) {
@@ -138,6 +140,7 @@ public void cd(String par1) {
 		Seged.popup("Hiba! Hianyzo parameter!", "Hiba!", frame);
 		return;
 	}
+	frame.changeDirectory(par1);
 	return;
 }
 public void hide(String par1) {
