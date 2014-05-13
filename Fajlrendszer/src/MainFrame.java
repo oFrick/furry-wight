@@ -105,9 +105,6 @@ public class MainFrame extends JFrame {
 		private JMenuItem képKódoló;
 		private JMenuItem képDekódoló;
 	
-	//TODO kitörölni
-	private String teszt;
-	
 	//Fájlrendszer mezõk
 	private DefaultMutableTreeNode selectedNode; //A fában éppen kiválasztott node
 	
@@ -193,7 +190,7 @@ public class MainFrame extends JFrame {
 		panel = new JPanel(layout);
 		setContentPane(panel);
 		
-		//TODO eltávolítani a felesleges részt
+		//TODO új fájlrendszer létrehozást implementálni ehelyett
 		rootElement = new DefaultMutableTreeNode(new Könyvtár("root",0));
 		selectedNode = rootElement; //Alapértelmezés
 		
@@ -560,12 +557,6 @@ public class MainFrame extends JFrame {
 				if(!kulcs.isEmpty()){
 					t = new Titkosító(kulcs, new EltolóAlgoritmus());
 					
-					//DEBUG
-					teszt = dataGet();
-					System.out.println("Kódolandó: "+teszt);
-					teszt = t.titkosít(teszt);
-					System.out.println("Kódolva: "+teszt);
-					
 					dataSet(((Entitás)selectedNode.getUserObject()), t.titkosít(dataGet()));
 					
 
@@ -585,10 +576,6 @@ public class MainFrame extends JFrame {
 					t = new Titkosító(kulcs, new EltolóAlgoritmus());
 					dataSet(((Entitás)selectedNode.getUserObject()), t.visszanyer(dataGet()));
 					
-					//DEBUG
-					teszt = t.visszanyer(teszt);
-					System.out.println("Visszafejtve: "+teszt);
-					
 				}else Seged.popup("Meg kell adni egy kulcsot!",  "Sikertelen dekódolás", sajat);
 				
 			}
@@ -605,12 +592,6 @@ public class MainFrame extends JFrame {
 						
 						BufferedImage kulcs = ImageIO.read(new File(útvonal));
 						KépTitkosító t = new KépTitkosító(kulcs, new EgyszerûKépAlgoritmus(15));
-						
-						//DEBUG
-						teszt = dataGet();
-						System.out.println("Kódolandó: "+teszt);
-						teszt = t.titkosít(teszt);
-						System.out.println("Kódolva: "+teszt);
 						
 						dataSet(((Entitás)selectedNode.getUserObject()), t.titkosít(dataGet()));
 						
@@ -634,10 +615,6 @@ public class MainFrame extends JFrame {
 						KépTitkosító t = new KépTitkosító(kulcs, new EgyszerûKépAlgoritmus(15));
 						
 						dataSet(((Entitás)selectedNode.getUserObject()), t.visszanyer(dataGet()));
-						
-						//DEBUG
-						teszt = t.visszanyer(teszt);
-						System.out.println("Visszafejtve: "+teszt);
 						
 					} catch (IOException e) {
 						Seged.popup("Nincs ilyen fájl!", "Sikertelen titkosítás!", sajat);
@@ -924,7 +901,6 @@ public class MainFrame extends JFrame {
 	 * @return
 	 */
 	private DefaultMutableTreeNode útvonalFejt(String útvonal){
-		StringTokenizer st = new StringTokenizer(útvonal,"/");
 		
 		String[] darabok = útvonal.split("/");
 		String cim = new String();
@@ -955,8 +931,8 @@ public class MainFrame extends JFrame {
 			try {
 				return new String(b, "UTF8");
 			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.err.println("Hiba a fájlból olvasáskor a karakterkódolással!");
+				System.err.println(e.getMessage());
 			}
 		}
 		return null;
@@ -973,8 +949,8 @@ public class MainFrame extends JFrame {
 				try {
 					dll.fileSetData(handle, str.getBytes("UTF8"));
 				} catch (UnsupportedEncodingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					System.err.println("Hiba a fájba íráskor a karakterkódolással!");
+					System.err.println(e.getMessage());
 				}
 				dll.fileSetReadPermission(handle, ent.isFuttatható());
 				dll.fileSetWritePermission(handle, ent.isÍrható());

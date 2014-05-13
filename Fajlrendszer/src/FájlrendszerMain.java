@@ -39,32 +39,9 @@ public class FájlrendszerMain {
 				
 				frame = new MainFrame("Fájlrendszer v0.0.4"); //Frame létrehozása
 				
-				//Teszteleléshez meghívott függvény - Dani
-				DaniTeszt();
 			}
 		});
 
-	}
-	
-	public static void DaniTeszt(){
-		
-		EgyszerûKépAlgoritmus algoritmus = new EgyszerûKépAlgoritmus(15);
-		
-		BufferedImage kép = null;
-		
-		try {
-			kép = ImageIO.read(new File("kepem.png"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		if(kép!=null) {
-			KépTitkosító titkos = new KépTitkosító(kép, algoritmus);
-			System.out.println("\"szoveg\" titkosítva: "+titkos.titkosít("szoveg"));
-			System.out.println(titkos.visszanyer(titkos.titkosít("szoveg")));
-		}
-		
 	}
 
 }
