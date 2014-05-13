@@ -106,7 +106,7 @@ public class MainFrame extends JFrame {
 		private JMenuItem képDekódoló;
 	
 	//TODO kitörölni
-	private String teszt = "lacibike";
+	private String teszt;
 	
 	//Fájlrendszer mezõk
 	private DefaultMutableTreeNode selectedNode; //A fában éppen kiválasztott node
@@ -259,20 +259,14 @@ public class MainFrame extends JFrame {
 					if(tartalmaz(selected)){
 						changeDirectory(((Entitás)selected.getUserObject()).getNév());
 						selectedNode = selected;
-						System.out.println("Aktuális hely: "+((Entitás)getWorkingDirectory().getUserObject()).getNév());
 					}else if(rootElement == selected){
 						selectedNode = selected;
 						changeDirectory("root");
-						System.out.println("Vissza a gyökérbe!");
-						System.out.println("Aktuális hely: "+((Entitás)getWorkingDirectory().getUserObject()).getNév());
 					}else if(selected == ((DefaultMutableTreeNode)selectedNode.getParent())){
 						//selectedNode = selected;
-						System.out.println("Vissza egy szinttel!");
 						changeDirectory("..");
-						System.out.println("Aktuális hely: "+((Entitás)getWorkingDirectory().getUserObject()).getNév());
 					}else if(selected != selectedNode){
 						Seged.popup("Hibás mûvelet: nem lehet így mappát/fájlt kiválasztani!", "Hibás kijelölés", sajat);
-						System.out.println("Aktuális hely: "+((Entitás)getWorkingDirectory().getUserObject()).getNév());
 					}
 					tartalom.setText("");
 					tartalom.setEnabled(false);
@@ -305,7 +299,7 @@ public class MainFrame extends JFrame {
 				else rejtett.setSelected(false);
 				
 				String[] l = dll.list();
-				System.out.print("A mappa tartalma: ");
+				if (debug) System.out.print("A mappa tartalma: ");
 				for(String str : l){
 					System.out.print(str+", ");
 				}
@@ -733,7 +727,6 @@ public class MainFrame extends JFrame {
 		}else Seged.popup("Hiba a létrehozáskor!", "Sikertelen fájl létrehozás", this);	
 		
 		int handle = dll.fileOpen(név);
-		System.out.println(név+" handle-je: "+handle+"!");
 		fájl.setHandle(handle);
 		dll.fileClose(handle);
 	}
