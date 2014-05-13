@@ -12,12 +12,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 import java.util.StringTokenizer;
-
-import javafx.stage.Popup;
 
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
@@ -41,9 +36,6 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import fájlrendszer.gui.SajatTreeModell;
@@ -72,7 +64,6 @@ public class MainFrame extends JFrame {
 	//Menü mezõk
 	private JMenuBar menüsor;
 	private JMenu fájlrendszerMenü;
-	private JMenuItem újFáljrendszer;
 	private JMenuItem kilépés;
 	
 	//Panel mezõk
@@ -143,9 +134,6 @@ public class MainFrame extends JFrame {
 				
 			}
 		});
-		
-		createDirectory("Danika");
-		rename("Danika", "Gábor");
 		
 	}
 	
@@ -506,13 +494,11 @@ public class MainFrame extends JFrame {
 		//Példányosítás
 		menüsor = new JMenuBar();
 		fájlrendszerMenü = new JMenu("Fájlrendszer");
-		újFáljrendszer = new JMenuItem("Új");
 		kilépés = new JMenuItem("Kilépés");
 		
 		//Objektumok "elhejezése"
 		this.setJMenuBar(menüsor);
 		menüsor.add(fájlrendszerMenü);
-		fájlrendszerMenü.add(újFáljrendszer);
 		fájlrendszerMenü.add(kilépés);
 		
 		egyébMenü = new JMenu("Egyéb");
@@ -626,6 +612,8 @@ public class MainFrame extends JFrame {
 		
 	}
 	
+	/**Beállítja a fa rajzolásához szükséges paramétereket
+	 */
 	private void setupCellRenderer(){
 		explorer.setCellRenderer(new DefaultTreeCellRenderer() {
 			private static final long serialVersionUID = 6307850244018307488L;
@@ -651,6 +639,10 @@ public class MainFrame extends JFrame {
 		
 	}
 	
+	/**Új fájl/mapp létrehozására használatos felugró ablakot hoz létre
+	 * @param milyet
+	 * @return String
+	 */
 	private String újElemPopup(String milyet){
 		TextField szövegmezõ = new TextField("új elem");
 		Object[] válaszLehetõség = {"Adja meg a "+milyet+" nevét", szövegmezõ}; 
@@ -666,7 +658,7 @@ public class MainFrame extends JFrame {
 	/**
 	 * Megadja, hogy melyik az épp aktuális könyvtár, amiben vagyunk. Ha épp egy fájl van
 	 * kijelölve, akkor a fájlt tartalmazó könyvtárral tér vissza, egyébként a kiválasztott könyvtárral.
-	 * @return
+	 * @return {@link DefaultMutableTreeNode}
 	 */
 	private DefaultMutableTreeNode getWorkingDirectory(){
 		
@@ -677,15 +669,11 @@ public class MainFrame extends JFrame {
 			return (DefaultMutableTreeNode) selectedNode.getParent();
 		}
 		
-		/*
-		if(selectedNode == rootElement) return rootElement;
-		else return (DefaultMutableTreeNode) selectedNode.getParent();
-		*/
 	}
 	
 	/**Visszatér a sztring nevû nodedal, ha az aktuális mappa tartalmazza azt a node-ot. Egyébként null a visz.érték
 	 * @param mit
-	 * @return
+	 * @return {@link DefaultMutableTreeNode}
 	 */
 	private DefaultMutableTreeNode tartalmaz(String mit){
 		DefaultMutableTreeNode wDir = getWorkingDirectory();
@@ -700,13 +688,16 @@ public class MainFrame extends JFrame {
 	/**Leellenõrzi, hogy a megadott node-ot tartalmazza-e az aktuális könyvtár. Az aktuális könyvtár az a könyvtár grafikailag,
 	 * ahol az utoljára kiválasztott node van. Ha ez a node könyvtár, akkor ez az aktuális.
 	 * @param mit
-	 * @return
+	 * @return boolean
 	 */
 	private boolean tartalmaz(DefaultMutableTreeNode mit){
 		if(tartalmaz(((Entitás)mit.getUserObject()).getNév()) != null) return true;
 		else return false;
 	}
 	
+	/**Megadott névvel létrehoz egy fájlt az aktuális könyvtárban
+	 * @param név
+	 */
 	public void createFile(String név){
 		Fájl fájl = new Fájl(név,0);
 		
@@ -720,6 +711,9 @@ public class MainFrame extends JFrame {
 		dll.fileClose(handle);
 	}
 	
+	/**Megadott névvel létrehoz egy könyvtárat az aktuális könyvtárban
+	 * @param név
+	 */
 	public void createDirectory(String név){
 		Könyvtár könyvtár = new Könyvtár(név,0);
 		if(dll.createDirectory(név)){
@@ -752,6 +746,12 @@ public class MainFrame extends JFrame {
 		if(!siker) Seged.popup("Nincs ilyen könytár/fájl: "+mit+"!", "Átnevezés sikertelen!", this);
 	}
 	
+	/**Átnevezi az elsõ paraméterben kapott elemet a második paraméterben kapott névre. A harmadik paraméterben
+	 * meg kell adni, hogy az átnevezendõ dolog fájl-e. Ez fontos, ugyanis a metódus nem foglalkozik azzal, hogy ez valóban az-e.
+	 * @param mit
+	 * @param mire
+	 * @param isFájl
+	 */
 	public void renameGui(String mit, String mire, boolean isFájl){
 		if(!isFájl) changeDirectory("..");
 		rename(mit, mire);
@@ -793,7 +793,6 @@ public class MainFrame extends JFrame {
 	}
 	
 	/**Törli az aktuális könyvtárban lévõ fájlt/mappát
-	 * @author Kiss Dániel
 	 * @param mit
 	 */
 	public void delete(String mit){
@@ -811,6 +810,10 @@ public class MainFrame extends JFrame {
 		}
 	}
 	
+	/**A törlés grafikai úton történõ megvalósítását végzõ metódus
+	 * @param mit
+	 * @param isFájl
+	 */
 	public void deleteGui(String mit, boolean isFájl){
 		if(!isFájl)changeDirectory("..");
 		delete(mit);
@@ -835,36 +838,42 @@ public class MainFrame extends JFrame {
 		*/
 		
 		DefaultMutableTreeNode mit = útvonalFejt(honnan);
-		int handle = dll.fileOpen("dani");
 		
-		if(mit.getUserObject() instanceof Könyvtár){
-			Seged.popup("Csak fájlt lehet alacsony szinten másolni!", "Sikertelen másolás!", sajat);
-			return;
-		}
-		
-		DefaultMutableTreeNode mibe;
-		
-		if(hova.equals("..") && selectedNode != rootElement){
-			mibe = (DefaultMutableTreeNode)selectedNode.getParent();
-		}else if(hova.equals("root")){
-			mibe = rootElement;
-		}else{
-			mibe = útvonalFejt(hova);
-		}
+		if(mit != null){
+			if(mit.getUserObject() instanceof Könyvtár){
+				Seged.popup("Csak fájlt lehet alacsony szinten másolni!", "Sikertelen másolás!", sajat);
+				return;
+			}
 			
-		System.out.println(((Entitás)mit.getUserObject()).getNév());
-		System.out.println(((Entitás)mibe.getUserObject()).getNév());
-		
-		if(handle != 0){
-			dll.fileCopy(handle);
-			dll.fileClose(handle);
+			int handle = dll.fileOpen(honnan);
 			
-			DefaultMutableTreeNode uj = (DefaultMutableTreeNode) mit.clone();
-			addTreeNode(uj, mibe);
+			DefaultMutableTreeNode mibe;
+			
+			if(hova.equals("..") && selectedNode != rootElement){
+				mibe = (DefaultMutableTreeNode)selectedNode.getParent();
+			}else if(hova.equals("root")){
+				mibe = rootElement;
+			}else{
+				mibe = útvonalFejt(hova);
+			}
+			
+			if(mibe != null){
+				if(handle != 0){
+					dll.fileCopy(handle);
+					dll.fileClose(handle);
+					
+					DefaultMutableTreeNode uj = (DefaultMutableTreeNode) mit.clone();
+					addTreeNode(uj, mibe);
 
-		}else Seged.popup("Másolásnál rossz handle megadás!","Sikertelen másolás!",sajat);
+				}else Seged.popup("Másolásnál rossz handle megadás!","Sikertelen másolás!",sajat);
+			}else if(handle != 0) dll.fileClose(handle);
+		}
 	}
 	
+	/**Áthelyezi a fájlt/mappát, amit az elsõ paraméterben kap a második paraméterben kapott helyre.
+	 * @param honnan
+	 * @param hova
+	 */
 	public void replace(String honnan, String hova){
 		
 		int handle = dll.fileOpen(honnan);
@@ -891,6 +900,8 @@ public class MainFrame extends JFrame {
 				dll.fileClose(handle);
 				addTreeNode(mit, mibe);
 
+			}else if(handle != 0){
+				dll.fileClose(handle);
 			}else Seged.popup("Nem találom a handle-t vagy helytelen forrás/cél megadás!","Sikertelen áthelyezés!",sajat);
 		}
 		
@@ -898,7 +909,7 @@ public class MainFrame extends JFrame {
 	
 	/**Visszatér az adoutt útvonal végén lévõ fájl/könyvtárral. Az aktuális mappát a megfelelõ helyre mozgatja, azaz ahol az útvonalnak vége van
 	 * @param útvonal
-	 * @return
+	 * @return {@link DefaultMutableTreeNode}
 	 */
 	private DefaultMutableTreeNode útvonalFejt(String útvonal){
 		
@@ -920,6 +931,9 @@ public class MainFrame extends JFrame {
 		return null;
 	}
 	
+	/**A fájl tartalmát kiolvassa és visszatér vele
+	 * @return String
+	 */
 	private String dataGet(){
 		byte[] b;
 		
@@ -938,10 +952,17 @@ public class MainFrame extends JFrame {
 		return null;
 	}
 	
+	/**A fájl tartalmát a beviteli szövegdoboznak megfelelõen felülírja. A teljes tartalom újraíródik.
+	 * @param ent - {@link Entitás} A fájl grafikus osztálya(õsosztály)
+	 */
 	private void dataSet(Entitás ent){
 		dataSet(ent, tartalom.getText());
 	}
 	
+	/**Az elsõ paraméterben képviselt fájl tartalmát a második paraméternek megfelelõen felülírja.
+	 * @param ent
+	 * @param str
+	 */
 	private void dataSet(Entitás ent, String str){
 		if(ent instanceof Fájl){
 			int handle = dll.fileOpen(ent.getNév());

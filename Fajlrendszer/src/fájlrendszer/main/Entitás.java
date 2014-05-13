@@ -2,6 +2,12 @@ package fájlrendszer.main;
 
 import java.util.Calendar;
 
+/**
+ * A fájlrendszer magas szintû megjelenítési objektumainak õsosztálya.
+ * Ebbõl származik a {@link Fájl} és a {@link Könyvtár}
+ * @author Kiss Dániel
+ *
+ */
 public abstract class Entitás {
 	
 	private boolean isFuttatható;

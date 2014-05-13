@@ -37,7 +37,7 @@ public class FájlrendszerMain {
 			@Override
 			public void run() {
 				
-				frame = new MainFrame("Fájlrendszer v0.0.4"); //Frame létrehozása
+				frame = new MainFrame("Fájlrendszer v1.1.1"); //Frame létrehozása
 				
 			}
 		});

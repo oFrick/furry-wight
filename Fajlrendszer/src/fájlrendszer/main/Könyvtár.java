@@ -4,6 +4,11 @@ import java.util.List;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
+/**
+ * A fájlrendszerben a könyvtár magas szintû megjelenítés célzatú osztálya.
+ * @author Kiss Dániel
+ *
+ */
 public class Könyvtár extends Entitás {
 	
 	

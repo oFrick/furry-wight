@@ -65,7 +65,7 @@ public class DLLFunctions {
      * A fájlban lévõ jelenlegi adatot törli, és átállítja az újra.
      * @param handle fájlazonosító
      * @param data adat
-     * @see fileOpen(String name)
+     * @see #fileOpen(String name)
      */
     native void fileSetData(int handle, byte[] data);
     
@@ -76,7 +76,7 @@ public class DLLFunctions {
      * Adat hozzáfûzése a fájlhoz.
      * @param handle fájlazonosító
      * @param data adat
-     * @see fileOpen(String name)
+     * @see #fileOpen(String name)
      */
     native void fileAppendData(int handle, byte[] data);
     
@@ -90,7 +90,7 @@ public class DLLFunctions {
      * @param handle fájlazonosító
      * @param from hanyadik bájttól töröljük az adatot?
      * @param size mennyit?
-     * @see fileOpen(String name)
+     * @see #fileOpen(String name)
      */
     native void fileEraseData(int handle, long from, long size);
     
