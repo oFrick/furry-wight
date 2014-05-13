@@ -23,7 +23,6 @@ import fájlrendszer.titkosítás.titkosítóAlgoritmus.KépTitkosítóAlgoritmus;
  * 
  * A felhasználó a frame objektumon belül kommunikál, azaz ott hív meg egyes metódusokat. Ezek fogják meghívjni a fájlrendszer és fájl metódusait.
  * @author Kiss Dániel
- * @version 0.0.4
  *
  */
 public class FájlrendszerMain {
@@ -36,7 +35,6 @@ public class FájlrendszerMain {
 			
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
 				
 				frame = new MainFrame("Fájlrendszer v0.0.4"); //Frame létrehozása
 				
@@ -48,12 +46,6 @@ public class FájlrendszerMain {
 	}
 	
 	public static void DaniTeszt(){
-		
-		/*DefaultMutableTreeNode filmek = new DefaultMutableTreeNode(new Könyvtár("Filmek")); //Filmek könyvtár
-			frame.addTreeNode(filmek);
-		DefaultMutableTreeNode játékok = new DefaultMutableTreeNode(new Könyvtár("Játékok"));
-			frame.addTreeNode(játékok);		
-		*/
 		
 		EgyszerûKépAlgoritmus algoritmus = new EgyszerûKépAlgoritmus(15);
 		
@@ -71,8 +63,6 @@ public class FájlrendszerMain {
 			System.out.println("\"szoveg\" titkosítva: "+titkos.titkosít("szoveg"));
 			System.out.println(titkos.visszanyer(titkos.titkosít("szoveg")));
 		}
-		
-		//ÜzenetKezelõ.popupÜzenet("Ez egy üzenet", "ablakom címe");
 		
 	}
 

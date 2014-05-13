@@ -6,7 +6,9 @@ import java.awt.GridBagLayout;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import java.util.StringTokenizer;
 
 import javafx.stage.Popup;
 
+import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -46,6 +49,10 @@ import fájlrendszer.gui.SajatTreeModell;
 import fájlrendszer.main.Entitás;
 import fájlrendszer.main.Fájl;
 import fájlrendszer.main.Könyvtár;
+import fájlrendszer.titkosítás.KépTitkosító;
+import fájlrendszer.titkosítás.Titkosító;
+import fájlrendszer.titkosítás.titkosítóAlgoritmus.EgyszerûKépAlgoritmus;
+import fájlrendszer.titkosítás.titkosítóAlgoritmus.EltolóAlgoritmus;
 
 /**
  * Az alkalmazás ablaka
@@ -54,6 +61,11 @@ import fájlrendszer.main.Könyvtár;
  */
 public class MainFrame extends JFrame {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2682758755048073588L;
+
 	public boolean debug = true;
 	
 	//Menü mezõk
@@ -86,6 +98,15 @@ public class MainFrame extends JFrame {
 	private JMenu egyébMenü;
 	private JMenuItem parancsMenüElem;
 	private JMenu titkosítás;
+	private JMenu szimplaTitkosító;
+		private JMenuItem szimplaKódoló;
+		private JMenuItem szimplaDekódoló;
+	private JMenu képTitkosító;
+		private JMenuItem képKódoló;
+		private JMenuItem képDekódoló;
+	
+	//TODO kitörölni
+	private String teszt = "lacibike";
 	
 	//Fájlrendszer mezõk
 	private DefaultMutableTreeNode selectedNode; //A fában éppen kiválasztott node
@@ -263,19 +284,12 @@ public class MainFrame extends JFrame {
 						Seged.popup("Hibás mûvelet: nem lehet így mappát/fájlt kiválasztani!", "Hibás kijelölés", sajat);
 					}else{
 						selectedNode = selected;
-						byte[] b;
-						if(debug){
-							
-							int handle = dll.fileOpen(((Entitás)selectedNode.getUserObject()).getNév());
-							if(handle != 0){
-								//System.out.println("név: "+((Entitás)selectedNode.getUserObject()).getNév()+", handle: "+handle);
-								b = dll.fileGetData(handle);
-								dll.fileClose(handle);
-								
-								tartalom.setEnabled(true);
-								tartalom.setText(new String(b));
-								ment.setEnabled(true);
-							}
+						
+						String adat = dataGet();
+						if(adat != null){
+							tartalom.setEnabled(true);
+							tartalom.setText(adat);
+							ment.setEnabled(true);
 						}
 					}
 				}
@@ -411,15 +425,7 @@ public class MainFrame extends JFrame {
 				ent.setRejtett(rejtett.isSelected());
 				
 				
-				if(selectedNode.getUserObject() instanceof Fájl){
-					int handle = dll.fileOpen(ent.getNév());
-					dll.fileSetData(handle, tartalom.getText().getBytes());
-					dll.fileSetReadPermission(handle, ent.isFuttatható());
-					dll.fileSetWritePermission(handle, ent.isÍrható());
-					dll.fileSetEncryption(handle, ent.isTitkosított());
-					dll.fileSetEncryption(handle, ent.isRejtett());
-					dll.fileClose(handle);
-				}
+				dataSet(ent);
 			}
 		});
 		
@@ -428,7 +434,6 @@ public class MainFrame extends JFrame {
 			//-----Fájl létrehozás esemény-----
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Új fájl létrehozása - fájl objektum példányosítása
 				createFile(újElemPopup("fájl"));
 				
 			}
@@ -439,7 +444,6 @@ public class MainFrame extends JFrame {
 			//-----Könyvtár létrehozás esemény-----
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Új könyvtár létrehozása - könyvtár objektum példányosítása
 				
 				createDirectory(újElemPopup("könyvtár"));
 				
@@ -451,7 +455,6 @@ public class MainFrame extends JFrame {
 			//-----Fájl törlés esemény-----
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Fájl törlés esemény implementálása a Fájl objektummal
 				/*
 				if(selectedNode != null) {
 					Entitás ent = (Entitás)selectedNode.getUserObject();
@@ -514,6 +517,22 @@ public class MainFrame extends JFrame {
 		parancsMenüElem = new JMenuItem("Parancsértelmezõ");
 		egyébMenü.add(parancsMenüElem);
 		
+		titkosítás = new JMenu("Titkosítás");
+		egyébMenü.add(titkosítás);
+		szimplaTitkosító = new JMenu("Egyszerû titkosítás");
+		titkosítás.add(szimplaTitkosító);
+		szimplaKódoló = new JMenuItem("Kódolás");
+		szimplaTitkosító.add(szimplaKódoló);
+		szimplaDekódoló = new JMenuItem("Dekódolás");
+		szimplaTitkosító.add(szimplaDekódoló);
+		képTitkosító = new JMenu("Kép alapú kódolás");
+		titkosítás.add(képTitkosító);
+		képKódoló = new JMenuItem("Kódolás");
+		képTitkosító.add(képKódoló);
+		képDekódoló = new JMenuItem("Dekódolás");
+		képTitkosító.add(képDekódoló);
+		
+		
 		parancsMenüElem.addActionListener(new ActionListener() {
 			
 			@Override
@@ -524,11 +543,110 @@ public class MainFrame extends JFrame {
 								
 			}
 		});
+		
+		szimplaKódoló.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String kulcs = Seged.inputPopup("Titkosítás kulcsa:", "kulcs", "Egyszerû kódolás", sajat);
+				Titkosító t;
+				
+				if(!kulcs.isEmpty()){
+					t = new Titkosító(kulcs, new EltolóAlgoritmus());
+					
+					//DEBUG
+					teszt = dataGet();
+					System.out.println("Kódolandó: "+teszt);
+					teszt = t.titkosít(teszt);
+					System.out.println("Kódolva: "+teszt);
+					
+					dataSet(((Entitás)selectedNode.getUserObject()), t.titkosít(dataGet()));
+					
+
+				}else Seged.popup("Meg kell adni egy kulcsot!",  "Sikertelen kódolás", sajat);
+				
+			}
+		});
+		
+		szimplaDekódoló.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String kulcs = Seged.inputPopup("Titkosítás kulcsa:", "kulcs", "Egyszerû kódolás", sajat);
+				Titkosító t;
+				
+				if(!kulcs.isEmpty()){
+					t = new Titkosító(kulcs, new EltolóAlgoritmus());
+					dataSet(((Entitás)selectedNode.getUserObject()), t.visszanyer(dataGet()));
+					
+					//DEBUG
+					teszt = t.visszanyer(teszt);
+					System.out.println("Visszafejtve: "+teszt);
+					
+				}else Seged.popup("Meg kell adni egy kulcsot!",  "Sikertelen dekódolás", sajat);
+				
+			}
+		});
+		
+		képKódoló.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String útvonal = Seged.inputPopup("Titkosító kép útvonala:", "kulcs", "Egyszerû kódolás", sajat);
+				int n = Integer.parseInt(Seged.inputPopup("Képpontok darabszáma:", "50", "Képpontszám", sajat));
+				if(n>=0 && n<90000000){
+					try {
+						
+						BufferedImage kulcs = ImageIO.read(new File(útvonal));
+						KépTitkosító t = new KépTitkosító(kulcs, new EgyszerûKépAlgoritmus(15));
+						
+						//DEBUG
+						teszt = dataGet();
+						System.out.println("Kódolandó: "+teszt);
+						teszt = t.titkosít(teszt);
+						System.out.println("Kódolva: "+teszt);
+						
+						dataSet(((Entitás)selectedNode.getUserObject()), t.titkosít(dataGet()));
+						
+					} catch (IOException e) {
+						Seged.popup("Nincs ilyen fájl!", "Sikertelen titkosítás!", sajat);
+					}
+				}else Seged.popup("pixelszám hibás megadás", "Sikertelen titkosítás", sajat);
+			}
+		});
+		
+		képDekódoló.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String útvonal = Seged.inputPopup("Titkosító kép útvonala:", "kulcs", "Egyszerû kódolás", sajat);
+				int n = Integer.parseInt(Seged.inputPopup("Képpontok darabszáma:", "50", "Képpontszám", sajat));
+				if(n>=0 && n<90000000){
+					try {
+						
+						BufferedImage kulcs = ImageIO.read(new File(útvonal));
+						KépTitkosító t = new KépTitkosító(kulcs, new EgyszerûKépAlgoritmus(15));
+						
+						dataSet(((Entitás)selectedNode.getUserObject()), t.visszanyer(dataGet()));
+						
+						//DEBUG
+						teszt = t.visszanyer(teszt);
+						System.out.println("Visszafejtve: "+teszt);
+						
+					} catch (IOException e) {
+						Seged.popup("Nincs ilyen fájl!", "Sikertelen titkosítás!", sajat);
+					}
+				}else Seged.popup("pixelszám hibás megadás", "Sikertelen titkosítás", sajat);
+				
+			}
+		});
+		
 	}
 	
 	private void setupCellRenderer(){
 		explorer.setCellRenderer(new DefaultTreeCellRenderer() {
-            private Icon fájlIcon = this.getDefaultLeafIcon();
+			private static final long serialVersionUID = 6307850244018307488L;
+			private Icon fájlIcon = this.getDefaultLeafIcon();
             private Icon mappaIcon = this.getDefaultClosedIcon();
             @Override
             public Component getTreeCellRendererComponent(JTree tree,
@@ -557,7 +675,7 @@ public class MainFrame extends JFrame {
 		
 		JOptionPane optionpane = new JOptionPane(válaszLehetõség, JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION, null, válaszGomb, válaszGomb[0]);
 		JDialog dialog = optionpane.createDialog(this, "Új "+milyet+" megadás");
-		dialog.show();
+		dialog.setEnabled(true);
 		
 		return szövegmezõ.getText();
 		
@@ -682,11 +800,6 @@ public class MainFrame extends JFrame {
 		
 	}
 	
-	private void delete(){
-		Entitás ent = (Entitás)selectedNode.getUserObject();
-		delete(ent.getNév());
-	}
-	
 	/**Törli az aktuális könyvtárban lévõ fájlt/mappát
 	 * @author Kiss Dániel
 	 * @param mit
@@ -809,5 +922,37 @@ public class MainFrame extends JFrame {
 		}
 		
 		return null;
+	}
+	
+	private String dataGet(){
+		byte[] b;
+		
+		int handle = dll.fileOpen(((Entitás)selectedNode.getUserObject()).getNév());
+		if(handle != 0){
+			b = dll.fileGetData(handle);
+			dll.fileClose(handle);
+			
+			return new String(b);
+		}
+		return null;
+	}
+	
+	private void dataSet(Entitás ent){
+		dataSet(ent, tartalom.getText());
+	}
+	
+	private void dataSet(Entitás ent, String str){
+		if(ent instanceof Fájl){
+			int handle = dll.fileOpen(ent.getNév());
+			if(handle != 0){
+				dll.fileSetData(handle, str.getBytes());
+				dll.fileSetReadPermission(handle, ent.isFuttatható());
+				dll.fileSetWritePermission(handle, ent.isÍrható());
+				dll.fileSetEncryption(handle, ent.isTitkosított());
+				dll.fileSetEncryption(handle, ent.isRejtett());
+				dll.fileClose(handle);
+			}
+			
+		}
 	}
 }
