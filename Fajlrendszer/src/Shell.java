@@ -74,7 +74,7 @@ public void helper(String par1) { //A megfelelo szoveg kiiratasa a help parancs 
 */
 public void cp(String par1, String par2) {
 	if ((par1 == "") || (par2 == "")) {
-		Seged.popup("Hiba! Hianyzo parameter(ek)!", "Hiba!", frame);
+		Seged.popup("Hiba! Hiányzó paraméter(ek)!", "Hiba!", frame);
 		return;
 	}
 	frame.copy(par1, par2);
@@ -83,7 +83,7 @@ public void cp(String par1, String par2) {
 
 public void mv(String par1, String par2) {
 	if ((par1 == "") || (par2 == "")) {
-		Seged.popup("Hiba! Hianyzo parameter(ek)!", "Hiba!", frame);
+		Seged.popup("Hiba! Hiányzó paraméter(ek)!", "Hiba!", frame);
 		return;
 	}
 	frame.replace(par1, par2);
@@ -91,7 +91,7 @@ public void mv(String par1, String par2) {
 }
 public void del(String par1) {
 	if (par1 == "") {
-		Seged.popup("Hiba! Hianyzo parameter!", "Hiba!", frame);
+		Seged.popup("Hiba! Hiányzó paraméter!", "Hiba!", frame);
 		return;
 	}
 	frame.delete(par1);
@@ -99,7 +99,7 @@ public void del(String par1) {
 }
 public void rn(String par1, String par2) {
 	if (par1 == "") {
-		Seged.popup("Hiba! Hianyzo parameter(ek)!", "Hiba!", frame);
+		Seged.popup("Hiba! Hiányzó paraméter(ek)!", "Hiba!", frame);
 		return;
 	}
 	frame.rename(par1, par2);
@@ -107,7 +107,7 @@ public void rn(String par1, String par2) {
 }
 public void mkdir(String par1) {
 	if (par1 == "") {
-		Seged.popup("Hiba! Hianyzo parameter!", "Hiba!", frame);
+		Seged.popup("Hiba! Hiányzó paraméter!", "Hiba!", frame);
 		return;
 	}
 	frame.createDirectory(par1);
@@ -115,7 +115,7 @@ public void mkdir(String par1) {
 }
 public void rmdir(String par1) {
 	if (par1 == "") {
-		Seged.popup("Hiba! Hianyzo parameter!", "Hiba!", frame);
+		Seged.popup("Hiba! Hiányzó paraméter!", "Hiba!", frame);
 		return;
 	}
 	frame.delete(par1);
@@ -123,21 +123,21 @@ public void rmdir(String par1) {
 }
 public void crypt(String par1) {
 	if (par1 == "") {
-		Seged.popup("Hiba! Hianyzo parameter!", "Hiba!", frame);
+		Seged.popup("Hiba! Hiányzó paraméter!", "Hiba!", frame);
 		return;
 	}
 	return;
 }
 public void decrypt(String par1) {
 	if (par1 == "") {
-		Seged.popup("Hiba! Hianyzo parameter!", "Hiba!", frame);
+		Seged.popup("Hiba! Hiányzó paraméter!", "Hiba!", frame);
 		return;
 	}
 	return;
 }
 public void cd(String par1) {
 	if (par1 == "") {
-		Seged.popup("Hiba! Hianyzo parameter!", "Hiba!", frame);
+		Seged.popup("Hiba! Hiányzó paraméter!", "Hiba!", frame);
 		return;
 	}
 	frame.changeDirectory(par1);
@@ -145,29 +145,24 @@ public void cd(String par1) {
 }
 public void hide(String par1) {
 	if (par1 == "") {
-		Seged.popup("Hiba! Hianyzo parameter!", "Hiba!", frame);
+		Seged.popup("Hiba! Hiányzó paraméter!", "Hiba!", frame);
 		return;
 	}
 	return;
 }
 public void unhide(String par1) {
 	if (par1 == "") {
-		Seged.popup("Hiba! Hianyzo parameter!", "Hiba!", frame);
+		Seged.popup("Hiba! Hiányzó paraméter!", "Hiba!", frame);
 		return;
 	}
 	return;
 }
 public void help(String par1) {
-	int i;
 	if (par1 == "") {
-		String[] commandlist = { "help", "cp", "copy", "mv", "rename", "hide", "unhide", "move", "del", "delete", "rn", "mkdir", "rmdir", "crypt", "decrypt", "cd"};
-		Arrays.sort(commandlist);
-		String str = new String();
-		for (i = 0; i < commandlist.length; i++) {
-			str+=commandlist[i];
-		}
-		Seged.popup("Lehetséges parancsok: "+str, "Elérhetõ parancsok", frame);
-	}else{
+		String commandlist = "help, cp, copy, mv, rename, move, del, delete, rn, mkdir, rmdir, cd";
+		Seged.popup("Lehetséges parancsok: "+commandlist, "Elérhetõ parancsok", frame);
+	}
+	else {
 		helper(par1);
 	}
 }
