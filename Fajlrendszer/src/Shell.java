@@ -24,7 +24,15 @@ public class Shell {
 		StringTokenizer st = new StringTokenizer(cmd); //Az inputot tokenekre bontjuk a szokozok menten
 		while (st.hasMoreTokens()) { //Amig van token...
 			switch (st.nextToken()) { //Az elso tokennek megfelelo parancs fuggvenyet hivjuk meg a megadott parameterekkel
-				case "help": par1 = st.nextToken(); help(par1); break;
+				case "help":
+					if(st.hasMoreTokens()) {
+						par1 = st.nextToken();
+						help(par1);
+					}
+					else {
+
+						help(""); break;
+					}
 				case "cp": par1 = st.nextToken(); par2 = st.nextToken(); cp(par1, par2); break;
 				case "copy": par1 = st.nextToken(); par2 = st.nextToken(); cp(par1, par2); break;
 				case "mv": par1 = st.nextToken(); par2 = st.nextToken(); mv(par1, par2); break;
